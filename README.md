@@ -22,7 +22,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | どこから来ましたか (Doko kara kimashita ka?)                         | Where are you from?                        |        |
 | わたしは [country] から来ました (Watashi wa [country] kara kimashita) | I'm from [country].                        | I came from [country].       |
 | 日本語が分かりません (Nihongo ga wakarimasen)                         | I don't understand Japanese.               |        |
-| 英語を話せますか (Eigo o hanasemasu ka?)                            | Can you speak English?                     |        |
+| 英語を話せますか (Eigo o hanasemasu ka?)                            | Can you speak English?                     |   Do you speak English?     |
 | トイレはどこですか (Toire wa doko desu ka?)                          | Where is the bathroom?                     |        |
 | 水をください (Mizu o kudasai)                                     | Please give me water.                      |  Please give me some water. / Water, please.      |
 | いくらですか (Ikura desu ka?)                                     | How much is it?                            |  How much does it cost?      |
