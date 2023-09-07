@@ -56,6 +56,9 @@
 
     </div>
 
+    <audio id="correctAudio" src="correct.m4a"></audio>
+    <audio id="incorrectAudio" src="incorrect.m4a"></audio>
+
     <script>
 
         const sentences = [
@@ -728,6 +731,12 @@
         function checkAnswer() {
             const userAnswer = document.getElementById('answer').value.trim();
             const feedback = document.getElementById('feedback');
+            const correctAudio = document.getElementById('correctAudio');
+            const incorrectAudio = document.getElementById('incorrectAudio');
+
+            if (!userAnswer) {
+                return;
+            }
 
             // Check against each possible English translation
             let isCorrect = currentSentence.a.some(translation => levenshtein(userAnswer, translation) <= 2);
@@ -739,6 +748,7 @@
                 }
                 isFeedbackDisplayed = true;
                 submitAnswerButton.textContent = "Next question";
+                correctAudio.play();
             } else {
                 feedback.textContent = "Incorrect! Correct answers: " + currentSentence.a.join(', ');
                 if (!mistakes[currentSentence.q]) {
@@ -748,6 +758,7 @@
                 }
                 isFeedbackDisplayed = true;
                 submitAnswerButton.textContent = "Next question";
+                incorrectAudio.play();
             }
 
             localStorage.setItem('mistakes', JSON.stringify(mistakes));
@@ -768,6 +779,7 @@
         });
 
         function loadNextSentence() {
+            currentTimeout ? clearTimeout(currentTimeout) : null;
             currentSentence = getNextSentence();
             document.getElementById('question').textContent = currentSentence.q;
             document.getElementById('answer').value = '';
