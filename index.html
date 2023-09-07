@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Japanese</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Learn Japanese</h1>
+    <form id="answerForm">
+        <div id="question"></div>
+        <input type="text" id="answer" placeholder="Type your answer">
+        <button type="submit">Submit</button>
+        <div id="feedback"></div>
+    </form>
+
+    <script>
+        const dataAsString = `
+        こんにちは (Konnichiwa) - Hello.
+    こんばんは (Konbanwa) - Good evening.
+    さようなら (Sayonara) - Goodbye.
+    ありがとうございます (Arigatou gozaimasu) - Thank you.
+    はい (Hai) - Yes.
+    いいえ (Iie) - No.
+    すみません (Sumimasen) - Excuse me.
+    おはようございます (Ohayou gozaimasu) - Good morning.
+    おやすみなさい (Oyasuminasai) - Goodnight.
+    お名前は何ですか (Onamae wa nan desu ka?) - What's your name?
+    わたしは [name] です (Watashi wa [name] desu) - I am [name].
+    どこから来ましたか (Doko kara kimashita ka?) - Where are you from?
+    わたしは [country] から来ました (Watashi wa [country] kara kimashita) - I'm from [country].
+    日本語が分かりません (Nihongo ga wakarimasen) - I don't understand Japanese.
+    英語を話せますか (Eigo o hanasemasu ka?) - Can you speak English?
+    トイレはどこですか (Toire wa doko desu ka?) - Where is the bathroom?
+    水をください (Mizu o kudasai) - Please give me water.
+    いくらですか (Ikura desu ka?) - How much is it?
+    高いです (Takai desu) - It's expensive.
+    安いです (Yasui desu) - It's cheap.
+    美味しい (Oishii) - Delicious.
+    お腹がすいた (Onaka ga suita) - I'm hungry.
+    のどが渇いた (Nodo ga kawaita) - I'm thirsty.
+    駅はどこですか (Eki wa doko desu ka?) - Where is the station?
+    これをください (Kore o kudasai) - I'll take this.
+    助けて (Tasukete) - Help!
+    病院はどこですか (Byouin wa doko desu ka?) - Where is the hospital?
+    痛い (Itai) - It hurts.
+    どれ (Dore?) - Which one?
+    今何時ですか (Ima nanji desu ka?) - What time is it now?
+    日本は初めてです (Nihon wa hajimete desu) - It's my first time in Japan.
+    また会いましょう (Mata aimashou) - Let's meet again.
+    分かりました (Wakarimashita) - I understand.
+    もう一度言ってください (Mou ichido itte kudasai) - Please say it one more time.
+    インターネットがつながりません (Inta-netto ga tsunagari masen) - The internet isn't working.
+    メニューを見せてください (Menyu o misete kudasai) - Please show me the menu.
+    チェックをください (Chekku o kudasai) - Check, please.
+    電話番号は何ですか (Denwa bangou wa nan desu ka?) - What's your phone number?
+    予約したい (Yoyaku shitai) - I'd like to make a reservation.
+    無料ですか (Muryou desu ka?) - Is it free?
+    ホテルはどこですか (Hoteru wa doko desu ka?) - Where is the hotel?
+    Wi-Fiのパスワードは何ですか (Wi-Fi no pasuwādo wa nan desu ka?) - What's the Wi-Fi password?
+    すぐに (Sugu ni) - Right away.
+    ゆっくり (Yukkuri) - Slowly.
+    大丈夫 (Daijoubu) - It's okay.
+    違います (Chigaimasu) - It's wrong.
+    わたしの (Watashi no) - Mine.
+    いつ (Itsu?) - When?
+    どうして (Doushite?) - Why?
+    どこ (Doko?) - Where?
+    誰 (Dare?) - Who?
+    どう (Dou?) - How?
+    何 (Nani?) - What?
+    好きです (Suki desu) - I like it.
+    嫌いです (Kirai desu) - I don't like it.
+    もっと (Motto) - More.
+    それで (Sore de) - And then?
+    こちら (Kochira) - This way.
+    あそこ (Asoko) - Over there.
+    今日 (Kyou) - Today.
+    明日 (Ashita) - Tomorrow.
+    昨日 (Kinou) - Yesterday.
+    いつも (Itsumo) - Always.
+    たまに (Tama ni) - Sometimes.
+    もう (Mou) - Already.
+    まだ (Mada) - Not yet.
+    ここ (Koko) - Here.
+    どうぞ (Douzo) - Please (when offering something).
+    よろしくお願いします (Yoroshiku onegaishimasu) - Nice to meet you / Please take care of it.
+    遅い (Osoi) - Late.
+    早い (Hayai) - Early.
+    いい (Ii) - Good.
+    悪い (Warui) - Bad.
+    大きい (Ookii) - Big.
+    小さい (Chiisai) - Small.
+    長い (Nagai) - Long.
+    短い (Mijikai) - Short.
+    寒い (Samui) - Cold.
+    暑い (Atsui) - Hot.
+    眠い (Nemui) - Sleepy.
+    うるさい (Urusai) - Noisy.
+    静か (Shizuka) - Quiet.
+    甘い (Amai) - Sweet.
+    辛い (Karai) - Spicy.
+    楽しい (Tanoshii) - Fun.
+    つまらない (Tsumaranai) - Boring.
+    新しい (Atarashii) - New.
+    古い (Furui) - Old.
+    近い (Chikai) - Near.
+    遠い (Tooi) - Far.
+    綺麗 (Kirei) - Beautiful.
+    汚い (Kitanai) - Dirty.
+    明るい (Akarui) - Bright.
+    暗い (Kurai) - Dark.
+    高い (Takai) - Tall.
+    低い (Hikui) - Short (in height).
+    若い (Wakai) - Young.
+    友達 (Tomodachi) - Friend.
+    家族 (Kazoku) - Family.
+    愛しています (Aishiteimasu) - I love you.
+        `
+
+        const sentences = dataAsString.split('\n').map(s => {
+            const [japanese, english] = s.split(' - ');
+            return { japanese, english };
+        });
+
+        let currentSentence = {};
+        let mistakes = {};
+
+        if (localStorage.getItem('mistakes')) {
+            mistakes = JSON.parse(localStorage.getItem('mistakes'));
+        }
+
+        function getNextSentence() {
+            let prioritizedSentences = sentences.filter(s => mistakes[s.english] && mistakes[s.english] > 1);
+
+            if (prioritizedSentences.length) {
+                return prioritizedSentences[Math.floor(Math.random() * prioritizedSentences.length)];
+            }
+
+            return sentences[Math.floor(Math.random() * sentences.length)];
+        }
+
+        function levenshtein(a, b) {
+            const matrix = [];
+
+            if (a.length == 0) return b.length;
+            if (b.length == 0) return a.length;
+
+            for (let i = 0; i <= b.length; i++) {
+                matrix[i] = [i];
+            }
+
+            for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+            }
+
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) == a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+                    }
+                }
+            }
+
+            return matrix[b.length][a.length];
+        }
+
+
+        function checkAnswer() {
+
+
+            const userAnswer = document.getElementById('answer').value.trim();
+            const feedback = document.getElementById('feedback');
+
+            // The threshold can be adjusted based on your preferences.
+            if (levenshtein(userAnswer, currentSentence.english) <= 2) {
+                feedback.textContent = "Correct!";
+                if (mistakes[currentSentence.english]) {
+                    mistakes[currentSentence.english]--;
+                }
+            } else {
+                feedback.textContent = "Incorrect! Correct answer: " + currentSentence.english;
+                if (!mistakes[currentSentence.english]) {
+                    mistakes[currentSentence.english] = 1;
+                } else {
+                    mistakes[currentSentence.english]++;
+                }
+            }
+
+            localStorage.setItem('mistakes', JSON.stringify(mistakes));
+
+            setTimeout(loadNextSentence, 2000);
+        }
+
+        document.getElementById('answerForm').addEventListener('submit', e => {
+            e.preventDefault();
+            checkAnswer();
+        });
+
+        function loadNextSentence() {
+            currentSentence = getNextSentence();
+            document.getElementById('question').textContent = currentSentence.japanese;
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').textContent = '';
+        }
+
+        loadNextSentence();
+    </script>
+</body>
+
+</html>
