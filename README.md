@@ -11,7 +11,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | こんにちは (Konnichiwa)                                          | Hello.                                     |        |
 | こんばんは (Konbanwa)                                            | Good evening.                              |        |
 | さようなら (Sayonara)                                            | Goodbye.                                   |        |
-| ありがとうございます (Arigatou gozaimasu)                             | Thank you.                                 |        |
+| ありがとうございます (Arigatou gozaimasu)                             | Thank you.                                 |   Thank you very much. / Thanks.     |
 | はい (Hai)                                                    | Yes.                                       |        |
 | いいえ (Iie)                                                   | No.                                        |        |
 | すみません (Sumimasen)                                           | Excuse me.                                 |        |
