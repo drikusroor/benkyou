@@ -26,7 +26,7 @@
             <a id="dutchLink" href="?lang=nl" class="text-white hover:text-pink-400">Nederlands</a>
         </div>
 
-        <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900" id="questionBox">
+        <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900 transition-colors" id="questionBox">
             <h1 id="title" class="text-4xl font-bold mb-4 text-pink-400">Learn Japanese</h1>
             <h2 id="subTitle" class="text-2xl font-semibold mb-6 text-purple-500 tracking-wider">100 most important Japanese sentences
                 and words</h2>
@@ -1161,7 +1161,7 @@
                 isFeedbackDisplayed = true;
                 submitAnswerButton.textContent = getTranslation('nextQuestion', "Next question");
                 correctAudio.play();
-                questionBox.classList.add('border-green-500', 'border-4');
+                questionBox.classList.add('border-green-500');
             } else {
                 const incorrectTranslation = getTranslation('incorrect', 'Incorrect! Correct answers: ');
 
@@ -1174,7 +1174,7 @@
                 isFeedbackDisplayed = true;
                 submitAnswerButton.textContent = getTranslation('nextQuestion', "Next question");
                 incorrectAudio.play();
-                questionBox.classList.add('border-red-500', 'border-4');
+                questionBox.classList.add('border-red-500');
             }
 
             localStorage.setItem('mistakes', JSON.stringify(mistakes));
@@ -1202,7 +1202,7 @@
             document.getElementById('feedback').textContent = '';
             isFeedbackDisplayed = false;
             submitAnswerButton.textContent = getTranslation('submitAnswerButton', "Submit");
-            questionBox.classList.remove('border-green-500', 'border-red-500', 'border-4');
+            questionBox.classList.remove('border-green-500', 'border-red-500');
         }
 
         loadNextSentence();
