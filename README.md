@@ -25,7 +25,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | 英語を話せますか (Eigo o hanasemasu ka?)                            | Can you speak English?                     |        |
 | トイレはどこですか (Toire wa doko desu ka?)                          | Where is the bathroom?                     |        |
 | 水をください (Mizu o kudasai)                                     | Please give me water.                      |        |
-| いくらですか (Ikura desu ka?)                                     | How much is it?                            |        |
+| いくらですか (Ikura desu ka?)                                     | How much is it?                            |  How much does it cost?      |
 | 高いです (Takai desu)                                           | It's expensive.                            |        |
 | 安いです (Yasui desu)                                           | It's cheap.                                |        |
 | 美味しい (Oishii)                                               | Delicious.                                 |        |
