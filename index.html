@@ -20,22 +20,32 @@
 <body>
     <div class="min-h-screen bg-black flex flex-col items-center justify-center p-5">
 
-        <div class="rounded-xl bg-slate-900 p-4 mb-4">
-            <a id="englishLink" href="?lang=en" class="text-white hover:text-pink-400">English</a>
-            <span class="text-white">|</span>
-            <a id="dutchLink" href="?lang=nl" class="text-white hover:text-pink-400">Nederlands</a>
-        </div>
+        <div class="flex flex-row gap-4">
+            <div class="rounded-xl bg-slate-900 p-4 mb-4">
+                <a id="englishLink" href="?lang=en" class="text-white hover:text-pink-400">English</a>
+                <span class="text-white">|</span>
+                <a id="dutchLink" href="?lang=nl" class="text-white hover:text-pink-400">Nederlands</a>
+            </div>
 
-        <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900 transition-colors" id="questionBox">
+            <div class="rounded-xl bg-slate-900 p-4 mb-4">
+                <a id="fromJapaneseLink" href="?mode=fromJapanese" class="text-white hover:text-pink-400">は > ha</a>
+                <span class="text-white">|</span>
+                <a id="toJapaneseLink" href="?mode=toJapanese" class="text-white hover:text-pink-400">ha > は</a>
+            </div>
+        </div>
+            
+        <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900 transition-colors"
+            id="questionBox">
             <h1 id="title" class="text-4xl font-bold mb-4 text-pink-400">Learn Japanese</h1>
-            <h2 id="subTitle" class="text-2xl font-semibold mb-6 text-purple-500 tracking-wider">100 most important Japanese sentences
+            <h2 id="subTitle" class="text-2xl font-semibold mb-6 text-purple-500 tracking-wider">100 most important
+                Japanese sentences
                 and words</h2>
 
             <form id="answerForm" class="space-y-4">
                 <div id="question" class="text-xl text-white font-medium"></div>
 
                 <div>
-                    <input type="text" id="answer" placeholder="Type your answer" required 
+                    <input type="text" id="answer" placeholder="Type your answer" required
                         class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out">
                 </div>
 
@@ -67,8 +77,8 @@
     <audio id="incorrectAudio" src="incorrect.m4a"></audio>
 
     <script>
-        // get current language from query param lang
         const currentLanguage = getCurrentLanguage();
+        const learningMode = getMode();
 
         const translations = {
             nl: {
@@ -1056,8 +1066,6 @@
                 return;
             }
 
-            // translate all translateable elements
-            // set title
             document.title = getTranslation('title', "Learn Japanese");
             document.getElementById('title').textContent = getTranslation('title', "Learn Japanese");
             document.getElementById('subTitle').textContent = getTranslation('mostImportantWords', "100 most important Japanese phrases and words");
@@ -1083,12 +1091,45 @@
 
         setLanguageSwitchState();
 
+        function setLearningModeSwitchState() {
+            const fromJapaneseLink = document.getElementById('fromJapaneseLink');
+            const toJapaneseLink = document.getElementById('toJapaneseLink');
+
+            if (learningMode === 'fromJapanese') {
+                fromJapaneseLink.classList.add('underline');
+                toJapaneseLink.classList.remove('underline');
+            } else {
+                fromJapaneseLink.classList.remove('underline');
+                toJapaneseLink.classList.add('underline');
+            }
+        }
+
+        setLearningModeSwitchState();
+
+        function updateLinksWithCurrentParams() {
+            const dutchLink = document.getElementById('dutchLink');
+            const englishLink = document.getElementById('englishLink');
+            const fromJapaneseLink = document.getElementById('fromJapaneseLink');
+            const toJapaneseLink = document.getElementById('toJapaneseLink');
+
+            dutchLink.href = `?lang=nl&mode=${learningMode}`;
+            englishLink.href = `?lang=en&mode=${learningMode}`;
+            fromJapaneseLink.href = `?lang=${currentLanguage}&mode=fromJapanese`;
+            toJapaneseLink.href = `?lang=${currentLanguage}&mode=toJapanese`;
+        }
+
+        updateLinksWithCurrentParams();
+
         function getTranslation(key, defaultValue) {
             if (currentLanguage === 'en') {
                 return defaultValue ? defaultValue : key;
             }
 
             return translations[currentLanguage][key] || defaultValue;
+        }
+
+        function getMode() {
+            return new URLSearchParams(window.location.search).get('mode') === 'toJapanese' ? 'toJapanese' : 'fromJapanese';
         }
 
         let currentSentence = {};
@@ -1144,17 +1185,24 @@
             const feedback = document.getElementById('feedback');
             const correctAudio = document.getElementById('correctAudio');
             const incorrectAudio = document.getElementById('incorrectAudio');
+            let isCorrect = false;
 
             if (!userAnswer) {
                 return;
             }
 
-            // Check against each possible English translation
-            let isCorrect = currentSentence[currentLanguage].some(translation => levenshtein(userAnswer.toLowerCase(), translation.toLowerCase()) <= 2);
+            if (learningMode === 'fromJapanese') {
+                isCorrect = currentSentence[currentLanguage].some(translation => levenshtein(userAnswer.toLowerCase(), translation.toLowerCase()) <= 2);
+            } else {
+                const romajiAnswer = currentSentence.q.match(/\((.*?)\)/)[1];
+                isCorrect = levenshtein(userAnswer.toLowerCase(), romajiAnswer.toLowerCase()) <= 2;
+            }
+
+            const correctAnswers = learningMode === 'fromJapanese' ? currentSentence[currentLanguage].join(', ') : currentSentence.q;
 
             if (isCorrect) {
                 const correctTranslation = getTranslation('correct', 'Correct!');
-                feedback.textContent = `✅ ${correctTranslation} (${currentSentence[currentLanguage].join(', ')})`;
+                feedback.textContent = `✅ ${correctTranslation} (${correctAnswers})`;
                 if (mistakes[currentSentence.q]) {
                     mistakes[currentSentence.q]--;
                 }
@@ -1164,8 +1212,7 @@
                 questionBox.classList.add('border-green-500');
             } else {
                 const incorrectTranslation = getTranslation('incorrect', 'Incorrect! Correct answers: ');
-
-                feedback.textContent = `❌ ${incorrectTranslation} ${currentSentence[currentLanguage].join(', ')}`;
+                feedback.textContent = `❌ ${incorrectTranslation} ${correctAnswers}`;
                 if (!mistakes[currentSentence.q]) {
                     mistakes[currentSentence.q] = 1;
                 } else {
@@ -1197,7 +1244,7 @@
         function loadNextSentence() {
             currentTimeout ? clearTimeout(currentTimeout) : null;
             currentSentence = getNextSentence();
-            document.getElementById('question').textContent = currentSentence.q;
+            document.getElementById('question').textContent = learningMode === 'fromJapanese' ? currentSentence.q : currentSentence[currentLanguage].join(' / ');
             document.getElementById('answer').value = '';
             document.getElementById('feedback').textContent = '';
             isFeedbackDisplayed = false;
