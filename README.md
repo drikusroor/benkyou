@@ -4,6 +4,20 @@ A mini web application to practice the 100 most important japanese words &amp; s
 
 You can visit the site at: <https://drikusroor.github.io/benkyou/>
 
+## Languages and modes
+
+Two languages are currently supported:
+
+- English
+- Dutch
+
+Aside from that, you can learn from Japanese to Language X or from Language X to Japanese. That gives us the following modes:
+
+- Japanese to English
+- English to Japanese
+- Japanese to Dutch
+- Dutch to Japanese
+
 ## Current list of words & sentences
 
 | Japanese (Romaji)                                                     | English                                                           | Dutch                                                                                  |
