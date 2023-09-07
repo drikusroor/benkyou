@@ -78,7 +78,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | どうぞ (Douzo)                                                 | Please (when offering something).          |        |
 | よろしくお願いします (Yoroshiku onegaishimasu)                        | Nice to meet you  | Please take care of it.       |
 | 遅い (Osoi)                                                   | Late.                                      |        |
-| 早い (Hayai)                                                  | Early.                                     |        |
+| 早い (Hayai)                                                  | Early.                                     | Fast.       |
 | いい (Ii)                                                     | Good.                                      | Good. / Fine. / Okay. / Nice.       |
 | 悪い (Warui)                                                  | Bad.                                       |        |
 | 大きい (Ookii)                                                 | Big.                                       |        |
