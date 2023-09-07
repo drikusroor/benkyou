@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
     <title>Learn Japanese</title>
+    <title>百 - Hyaku | Learn Japanese</title>
     <style>
         body {
             font-family: 'Prompt', 'Arial', sans-serif;
@@ -33,11 +34,11 @@
                 <a id="toJapaneseLink" href="?mode=toJapanese" class="text-white hover:text-pink-400">ha > は</a>
             </div>
         </div>
-            
+
         <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900 transition-colors"
             id="questionBox">
-            <h1 id="title" class="text-4xl font-bold mb-2 text-pink-400">Learn Japanese</h1>
-            <h2 id="subTitle" class="text-lg font-semibold mb-6 text-purple-500 tracking-wider">The 100 most important
+            <h1 id="title" class="text-4xl font-bold mb-2 text-pink-400">百 - Hyaku</h1>
+            <h2 id="subTitle" class="text-md font-semibold mb-6 text-purple-500 tracking-wider">Learn the 100 most important
                 Japanese sentences
                 and words</h2>
 
@@ -82,8 +83,8 @@
 
         const translations = {
             nl: {
-                title: "Leer Japans",
-                mostImportantWords: "De 100 belangrijkste Japanse zinnen en woorden",
+                title: "百 - Hyaku",
+                mostImportantWords: "Leer de 100 belangrijkste Japanse zinnen en woorden",
                 answer: "Typ je antwoord",
                 submitAnswerButton: "Verstuur",
                 correct: "Correct!",
@@ -1067,9 +1068,9 @@
                 return;
             }
 
-            document.title = getTranslation('title', "Learn Japanese");
-            document.getElementById('title').textContent = getTranslation('title', "Learn Japanese");
-            document.getElementById('subTitle').textContent = getTranslation('mostImportantWords', "100 most important Japanese phrases and words");
+            document.title = getTranslation('title', "百 - Hyaku");
+            document.getElementById('title').textContent = getTranslation('title', "百 - Hyaku");
+            document.getElementById('subTitle').textContent = getTranslation('mostImportantWords', "Learn the 100 most important Japanese phrases and words");
             document.getElementById('answer').placeholder = getTranslation('answer', "Type your answer");
             document.getElementById('submitAnswerButton').textContent = getTranslation('submitAnswerButton', "Submit");
             document.getElementById('searchCheatsheet').placeholder = getTranslation('search', "Search");
