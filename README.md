@@ -37,7 +37,7 @@ You can visit the site at: <https://drikusroor.github.io/benkyou/>
 | 病院はどこですか (Byouin wa doko desu ka?)                            | Where is the hospital?            |                                             |
 | 痛い (Itai)                                                           | It hurts.                         |                                             |
 | どれ (Dore?)                                                          | Which one?                        | Which?                                      |
-| 今何時ですか (Ima nanji desu ka?)                                     | What time is it now?              |                                             |
+| 今何時ですか (Ima nanji desu ka?)                                     | What time is it now?              |      What's the time?                                       |
 | 日本は初めてです (Nihon wa hajimete desu)                             | It's my first time in Japan.      |                                             |
 | また会いましょう (Mata aimashou)                                      | Let's meet again.                 |                                             |
 | 分かりました (Wakarimashita)                                          | I understand.                     |                                             |
