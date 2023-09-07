@@ -680,6 +680,9 @@
 
         let currentSentence = {};
         let mistakes = {};
+        let isFeedbackDisplayed = false;
+        const submitAnswerButton = document.getElementById('submitAnswerButton');
+        let currentTimeout = null;
 
         if (localStorage.getItem('mistakes')) {
             mistakes = JSON.parse(localStorage.getItem('mistakes'));
@@ -734,6 +737,8 @@
                 if (mistakes[currentSentence.q]) {
                     mistakes[currentSentence.q]--;
                 }
+                isFeedbackDisplayed = true;
+                submitAnswerButton.textContent = "Next question";
             } else {
                 feedback.textContent = "Incorrect! Correct answers: " + currentSentence.a.join(', ');
                 if (!mistakes[currentSentence.q]) {
@@ -741,16 +746,25 @@
                 } else {
                     mistakes[currentSentence.q]++;
                 }
+                isFeedbackDisplayed = true;
+                submitAnswerButton.textContent = "Next question";
             }
 
             localStorage.setItem('mistakes', JSON.stringify(mistakes));
 
-            setTimeout(loadNextSentence, 5000);
+            currentTimeout ? clearTimeout(currentTimeout) : null;
+
+            currentTimeout = setTimeout(loadNextSentence, 3500);
         }
 
         document.getElementById('answerForm').addEventListener('submit', e => {
             e.preventDefault();
-            checkAnswer();
+
+            if (isFeedbackDisplayed) {
+                loadNextSentence();
+            } else {
+                checkAnswer();
+            }
         });
 
         function loadNextSentence() {
@@ -758,6 +772,8 @@
             document.getElementById('question').textContent = currentSentence.q;
             document.getElementById('answer').value = '';
             document.getElementById('feedback').textContent = '';
+            isFeedbackDisplayed = false;
+            submitAnswerButton.textContent = "Submit";
         }
 
         loadNextSentence();
