@@ -43,7 +43,7 @@ You can visit the site at: <https://drikusroor.github.io/benkyou/>
 | 分かりました (Wakarimashita)                                          | I understand.                     |                                             |
 | もう一度言ってください (Mou ichido itte kudasai)                      | Please say it one more time.      |                                             |
 | インターネットがつながりません (Inta-netto ga tsunagari masen)        | The internet isn't working.       |                                             |
-| メニューを見せてください (Menyu o misete kudasai)                     | Please show me the menu.          |                                             |
+| メニューを見せてください (Menyu o misete kudasai)                     | Please show me the menu.          |      The menu, please.                                       |
 | チェックをください (Chekku o kudasai)                                 | Check, please.                    |                                             |
 | 電話番号は何ですか (Denwa bangou wa nan desu ka?)                     | What's your phone number?         |                                             |
 | 予約したい (Yoyaku shitai)                                            | I'd like to make a reservation.   |                                             |
