@@ -28,7 +28,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | いくらですか (Ikura desu ka?)                                     | How much is it?                            |  How much does it cost?      |
 | 高いです (Takai desu)                                           | It's expensive.                            |        |
 | 安いです (Yasui desu)                                           | It's cheap.                                |        |
-| 美味しい (Oishii)                                               | Delicious.                                 |        |
+| 美味しい (Oishii)                                               | Delicious.                                 |   Tasty.     |
 | お腹がすいた (Onaka ga suita)                                     | I'm hungry.                                |        |
 | のどが渇いた (Nodo ga kawaita)                                    | I'm thirsty.                               |        |
 | 駅はどこですか (Eki wa doko desu ka?)                              | Where is the station?                      |        |
