@@ -54,7 +54,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | ゆっくり (Yukkuri)                                              | Slowly.                                    |        |
 | 大丈夫 (Daijoubu)                                              | It's okay.                                 |        |
 | 違います (Chigaimasu)                                           | It's wrong.                                |        |
-| わたしの (Watashi no)                                           | Mine.                                      |        |
+| わたしの (Watashi no)                                           | Mine.                                      |  My.      |
 | いつ (Itsu?)                                                  | When?                                      |        |
 | どうして (Doushite?)                                            | Why?                                       |        |
 | どこ (Doko?)                                                  | Where?                                     |        |
