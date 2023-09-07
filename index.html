@@ -1144,7 +1144,23 @@
         }
 
         function getNextSentence() {
-            let prioritizedSentences = sentences.filter(s => mistakes[s.q] && mistakes[s.q] > 1);
+            let prioritizedSentences = sentences
+                .filter(sentence => sentence.q !== currentSentence.q)
+                .sort((a, b) => {
+                    if (mistakes[a.q] && mistakes[b.q]) {
+                        return mistakes[a.q] - mistakes[b.q];
+                    }
+
+                    if (mistakes[a.q]) {
+                        return -1;
+                    }
+
+                    if (mistakes[b.q]) {
+                        return 1;
+                    }
+
+                    return 0;
+                }).slice(0, 10);
 
             if (prioritizedSentences.length) {
                 return prioritizedSentences[Math.floor(Math.random() * prioritizedSentences.length)];
