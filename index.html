@@ -20,15 +20,15 @@
 <body>
     <div class="min-h-screen bg-black flex flex-col items-center justify-center p-5">
         <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900">
-            <h1 class="text-4xl font-bold mb-4 text-pink-400">Learn Japanese</h1>
-            <h2 class="text-2xl font-semibold mb-6 text-purple-500 tracking-wider">100 most important Japanese sentences
+            <h1 id="title" class="text-4xl font-bold mb-4 text-pink-400">Learn Japanese</h1>
+            <h2 id="subTitle" class="text-2xl font-semibold mb-6 text-purple-500 tracking-wider">100 most important Japanese sentences
                 and words</h2>
 
             <form id="answerForm" class="space-y-4">
                 <div id="question" class="text-xl text-white font-medium"></div>
 
                 <div>
-                    <input type="text" id="answer" placeholder="Type your answer" required
+                    <input type="text" id="answer" placeholder="Type your answer" required 
                         class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out">
                 </div>
 
@@ -60,6 +60,22 @@
     <audio id="incorrectAudio" src="incorrect.m4a"></audio>
 
     <script>
+        // get current language from query param lang
+        const currentLanguage = getCurrentLanguage();
+
+        const translations = {
+            nl: {
+                title: "Leer Japans",
+                mostImportantWords: "100 belangrijkste Japanse zinnen en woorden",
+                answer: "Typ je antwoord",
+                submitAnswerButton: "Verstuur",
+                correct: "Correct!",
+                incorrect: "Incorrect! Correcte antwoord(en): ",
+                correctAnswers: "Correcte antwoorden: ",
+                nextQuestion: "Volgende vraag",
+                search: "Zoeken",
+            }
+        }
 
         const sentences = [
             {
@@ -1020,6 +1036,34 @@
             }
         ]
 
+        function getCurrentLanguage() {
+            return new URLSearchParams(window.location.search).get('lang') || 'en';
+        }
+
+        function translate() {
+            if (currentLanguage === 'en') {
+                return;
+            }
+
+            // translate all translateable elements
+            // set title
+            document.title = getTranslation('title', "Learn Japanese");
+            document.getElementById('title').textContent = getTranslation('title', "Learn Japanese");
+            document.getElementById('subTitle').textContent = getTranslation('mostImportantWords', "100 most important Japanese phrases and words");
+            document.getElementById('answer').placeholder = getTranslation('answer', "Type your answer");
+            document.getElementById('submitAnswerButton').textContent = getTranslation('submitAnswerButton', "Submit");
+            document.getElementById('searchCheatsheet').placeholder = getTranslation('search', "Search");
+        }
+
+        translate();
+
+        function getTranslation(key, defaultValue) {
+            if (currentLanguage === 'en') {
+                return defaultValue ? defaultValue : key;
+            }
+
+            return translations[currentLanguage][key] || defaultValue;
+        }
 
         let currentSentence = {};
         let mistakes = {};
@@ -1079,25 +1123,28 @@
             }
 
             // Check against each possible English translation
-            let isCorrect = currentSentence.en.some(translation => levenshtein(userAnswer, translation) <= 2);
+            let isCorrect = currentSentence[currentLanguage].some(translation => levenshtein(userAnswer, translation) <= 2);
 
             if (isCorrect) {
-                feedback.textContent = `✅ Correct! (${currentSentence.en.join(', ')})`;
+                const correctTranslation = getTranslation('correct', 'Correct!');
+                feedback.textContent = `✅ ${correctTranslation} (${currentSentence[currentLanguage].join(', ')})`;
                 if (mistakes[currentSentence.q]) {
                     mistakes[currentSentence.q]--;
                 }
                 isFeedbackDisplayed = true;
-                submitAnswerButton.textContent = "Next question";
+                submitAnswerButton.textContent = getTranslation('nextQuestion', "Next question");
                 correctAudio.play();
             } else {
-                feedback.textContent = "❌ Incorrect! Correct answers: " + currentSentence.en.join(', ');
+                const incorrectTranslation = getTranslation('incorrect', 'Incorrect! Correct answers: ');
+
+                feedback.textContent = `❌ ${incorrectTranslation} ${currentSentence[currentLanguage].join(', ')}`;
                 if (!mistakes[currentSentence.q]) {
                     mistakes[currentSentence.q] = 1;
                 } else {
                     mistakes[currentSentence.q]++;
                 }
                 isFeedbackDisplayed = true;
-                submitAnswerButton.textContent = "Next question";
+                submitAnswerButton.textContent = getTranslation('nextQuestion', "Next question");
                 incorrectAudio.play();
             }
 
@@ -1125,12 +1172,14 @@
             document.getElementById('answer').value = '';
             document.getElementById('feedback').textContent = '';
             isFeedbackDisplayed = false;
-            submitAnswerButton.textContent = "Submit";
+            submitAnswerButton.textContent = getTranslation('submitAnswerButton', "Submit");
         }
 
         loadNextSentence();
 
         function initializeCheatsheet() {
+            const currentLanguage = getCurrentLanguage();
+
             const cheatsheet = document.getElementById('cheatsheet');
 
             sentences.forEach(sentence => {
@@ -1138,7 +1187,7 @@
                 li.classList.add('bg-slate-800', 'p-4', 'rounded-md', 'shadow-md', 'text-white', 'text-lg', 'font-medium', 'flex', 'items-center', 'justify-between');
                 li.innerHTML = `
                     <div class="text-xl">${sentence.q}</div>
-                    <div class="text-pink-400">${sentence.en.join(' / ')}</div>
+                    <div class="text-pink-400">${sentence[currentLanguage].join(' / ')}</div>
                 `;
                 cheatsheet.appendChild(li);
             });
@@ -1153,12 +1202,12 @@
             cheatsheet.innerHTML = '';
 
             sentences.forEach(sentence => {
-                if (sentence.q.toLowerCase().includes(searchTerm) || sentence.en.join(' / ').toLowerCase().includes(searchTerm)) {
+                if (sentence.q.toLowerCase().includes(searchTerm) || sentence[currentLanguage].join(' / ').toLowerCase().includes(searchTerm)) {
                     const li = document.createElement('li');
                     li.classList.add('bg-slate-800', 'p-4', 'rounded-md', 'shadow-md', 'text-white', 'text-lg', 'font-medium', 'flex', 'items-center', 'justify-between');
                     li.innerHTML = `
                         <div class="text-xl">${sentence.q}</div>
-                        <div class="text-pink-400">${sentence.en.join(' / ')}</div>
+                        <div class="text-pink-400">${sentence[currentLanguage].join(' / ')}</div>
                     `;
                     cheatsheet.appendChild(li);
                 }
