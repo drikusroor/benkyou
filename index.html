@@ -40,118 +40,420 @@
                 </div>
 
                 <div id="feedback" class="text-lg text-pink-400 font-medium"></div>
-    </form>
+            </form>
         </div>
     </div>
 
     <script>
-        const dataAsString = `
-        こんにちは (Konnichiwa) - Hello.
-    こんばんは (Konbanwa) - Good evening.
-    さようなら (Sayonara) - Goodbye.
-    ありがとうございます (Arigatou gozaimasu) - Thank you.
-    はい (Hai) - Yes.
-    いいえ (Iie) - No.
-    すみません (Sumimasen) - Excuse me.
-    おはようございます (Ohayou gozaimasu) - Good morning.
-    おやすみなさい (Oyasuminasai) - Goodnight.
-    お名前は何ですか (Onamae wa nan desu ka?) - What's your name?
-    わたしは [name] です (Watashi wa [name] desu) - I am [name].
-    どこから来ましたか (Doko kara kimashita ka?) - Where are you from?
-    わたしは [country] から来ました (Watashi wa [country] kara kimashita) - I'm from [country].
-    日本語が分かりません (Nihongo ga wakarimasen) - I don't understand Japanese.
-    英語を話せますか (Eigo o hanasemasu ka?) - Can you speak English?
-    トイレはどこですか (Toire wa doko desu ka?) - Where is the bathroom?
-    水をください (Mizu o kudasai) - Please give me water.
-    いくらですか (Ikura desu ka?) - How much is it?
-    高いです (Takai desu) - It's expensive.
-    安いです (Yasui desu) - It's cheap.
-    美味しい (Oishii) - Delicious.
-    お腹がすいた (Onaka ga suita) - I'm hungry.
-    のどが渇いた (Nodo ga kawaita) - I'm thirsty.
-    駅はどこですか (Eki wa doko desu ka?) - Where is the station?
-    これをください (Kore o kudasai) - I'll take this.
-    助けて (Tasukete) - Help!
-    病院はどこですか (Byouin wa doko desu ka?) - Where is the hospital?
-    痛い (Itai) - It hurts.
-    どれ (Dore?) - Which one?
-    今何時ですか (Ima nanji desu ka?) - What time is it now?
-    日本は初めてです (Nihon wa hajimete desu) - It's my first time in Japan.
-    また会いましょう (Mata aimashou) - Let's meet again.
-    分かりました (Wakarimashita) - I understand.
-    もう一度言ってください (Mou ichido itte kudasai) - Please say it one more time.
-    インターネットがつながりません (Inta-netto ga tsunagari masen) - The internet isn't working.
-    メニューを見せてください (Menyu o misete kudasai) - Please show me the menu.
-    チェックをください (Chekku o kudasai) - Check, please.
-    電話番号は何ですか (Denwa bangou wa nan desu ka?) - What's your phone number?
-    予約したい (Yoyaku shitai) - I'd like to make a reservation.
-    無料ですか (Muryou desu ka?) - Is it free?
-    ホテルはどこですか (Hoteru wa doko desu ka?) - Where is the hotel?
-    Wi-Fiのパスワードは何ですか (Wi-Fi no pasuwādo wa nan desu ka?) - What's the Wi-Fi password?
-    すぐに (Sugu ni) - Right away.
-    ゆっくり (Yukkuri) - Slowly.
-    大丈夫 (Daijoubu) - It's okay.
-    違います (Chigaimasu) - It's wrong.
-    わたしの (Watashi no) - Mine.
-    いつ (Itsu?) - When?
-    どうして (Doushite?) - Why?
-    どこ (Doko?) - Where?
-    誰 (Dare?) - Who?
-    どう (Dou?) - How?
-    何 (Nani?) - What?
-    好きです (Suki desu) - I like it.
-    嫌いです (Kirai desu) - I don't like it.
-    もっと (Motto) - More.
-    それで (Sore de) - And then?
-    こちら (Kochira) - This way.
-    あそこ (Asoko) - Over there.
-    今日 (Kyou) - Today.
-    明日 (Ashita) - Tomorrow.
-    昨日 (Kinou) - Yesterday.
-    いつも (Itsumo) - Always.
-    たまに (Tama ni) - Sometimes.
-    もう (Mou) - Already.
-    まだ (Mada) - Not yet.
-    ここ (Koko) - Here.
-    どうぞ (Douzo) - Please (when offering something).
-    よろしくお願いします (Yoroshiku onegaishimasu) - Nice to meet you / Please take care of it.
-    遅い (Osoi) - Late.
-    早い (Hayai) - Early.
-    いい (Ii) - Good.
-    悪い (Warui) - Bad.
-    大きい (Ookii) - Big.
-    小さい (Chiisai) - Small.
-    長い (Nagai) - Long.
-    短い (Mijikai) - Short.
-    寒い (Samui) - Cold.
-    暑い (Atsui) - Hot.
-    眠い (Nemui) - Sleepy.
-    うるさい (Urusai) - Noisy.
-    静か (Shizuka) - Quiet.
-    甘い (Amai) - Sweet.
-    辛い (Karai) - Spicy.
-    楽しい (Tanoshii) - Fun.
-    つまらない (Tsumaranai) - Boring.
-    新しい (Atarashii) - New.
-    古い (Furui) - Old.
-    近い (Chikai) - Near.
-    遠い (Tooi) - Far.
-    綺麗 (Kirei) - Beautiful.
-    汚い (Kitanai) - Dirty.
-    明るい (Akarui) - Bright.
-    暗い (Kurai) - Dark.
-    高い (Takai) - Tall.
-    低い (Hikui) - Short (in height).
-    若い (Wakai) - Young.
-    友達 (Tomodachi) - Friend.
-    家族 (Kazoku) - Family.
-    愛しています (Aishiteimasu) - I love you.
-        `
 
-        const sentences = dataAsString.split('\n').map(s => {
-            const [japanese, english] = s.split(' - ');
-            return { japanese, english };
-        });
+        const sentences = [
+            {
+                "japanese": ""
+            },
+            {
+                "japanese": "        こんにちは (Konnichiwa)",
+                "english": "Hello."
+            },
+            {
+                "japanese": "    こんばんは (Konbanwa)",
+                "english": "Good evening."
+            },
+            {
+                "japanese": "    さようなら (Sayonara)",
+                "english": "Goodbye."
+            },
+            {
+                "japanese": "    ありがとうございます (Arigatou gozaimasu)",
+                "english": "Thank you."
+            },
+            {
+                "japanese": "    はい (Hai)",
+                "english": "Yes."
+            },
+            {
+                "japanese": "    いいえ (Iie)",
+                "english": "No."
+            },
+            {
+                "japanese": "    すみません (Sumimasen)",
+                "english": "Excuse me."
+            },
+            {
+                "japanese": "    おはようございます (Ohayou gozaimasu)",
+                "english": "Good morning."
+            },
+            {
+                "japanese": "    おやすみなさい (Oyasuminasai)",
+                "english": "Goodnight."
+            },
+            {
+                "japanese": "    お名前は何ですか (Onamae wa nan desu ka?)",
+                "english": "What's your name?"
+            },
+            {
+                "japanese": "    わたしは [name] です (Watashi wa [name] desu)",
+                "english": "I am [name]."
+            },
+            {
+                "japanese": "    どこから来ましたか (Doko kara kimashita ka?)",
+                "english": "Where are you from?"
+            },
+            {
+                "japanese": "    わたしは [country] から来ました (Watashi wa [country] kara kimashita)",
+                "english": "I'm from [country]."
+            },
+            {
+                "japanese": "    日本語が分かりません (Nihongo ga wakarimasen)",
+                "english": "I don't understand Japanese."
+            },
+            {
+                "japanese": "    英語を話せますか (Eigo o hanasemasu ka?)",
+                "english": "Can you speak English?"
+            },
+            {
+                "japanese": "    トイレはどこですか (Toire wa doko desu ka?)",
+                "english": "Where is the bathroom?"
+            },
+            {
+                "japanese": "    水をください (Mizu o kudasai)",
+                "english": "Please give me water."
+            },
+            {
+                "japanese": "    いくらですか (Ikura desu ka?)",
+                "english": "How much is it?"
+            },
+            {
+                "japanese": "    高いです (Takai desu)",
+                "english": "It's expensive."
+            },
+            {
+                "japanese": "    安いです (Yasui desu)",
+                "english": "It's cheap."
+            },
+            {
+                "japanese": "    美味しい (Oishii)",
+                "english": "Delicious."
+            },
+            {
+                "japanese": "    お腹がすいた (Onaka ga suita)",
+                "english": "I'm hungry."
+            },
+            {
+                "japanese": "    のどが渇いた (Nodo ga kawaita)",
+                "english": "I'm thirsty."
+            },
+            {
+                "japanese": "    駅はどこですか (Eki wa doko desu ka?)",
+                "english": "Where is the station?"
+            },
+            {
+                "japanese": "    これをください (Kore o kudasai)",
+                "english": "I'll take this."
+            },
+            {
+                "japanese": "    助けて (Tasukete)",
+                "english": "Help!"
+            },
+            {
+                "japanese": "    病院はどこですか (Byouin wa doko desu ka?)",
+                "english": "Where is the hospital?"
+            },
+            {
+                "japanese": "    痛い (Itai)",
+                "english": "It hurts."
+            },
+            {
+                "japanese": "    どれ (Dore?)",
+                "english": "Which one?"
+            },
+            {
+                "japanese": "    今何時ですか (Ima nanji desu ka?)",
+                "english": "What time is it now?"
+            },
+            {
+                "japanese": "    日本は初めてです (Nihon wa hajimete desu)",
+                "english": "It's my first time in Japan."
+            },
+            {
+                "japanese": "    また会いましょう (Mata aimashou)",
+                "english": "Let's meet again."
+            },
+            {
+                "japanese": "    分かりました (Wakarimashita)",
+                "english": "I understand."
+            },
+            {
+                "japanese": "    もう一度言ってください (Mou ichido itte kudasai)",
+                "english": "Please say it one more time."
+            },
+            {
+                "japanese": "    インターネットがつながりません (Inta-netto ga tsunagari masen)",
+                "english": "The internet isn't working."
+            },
+            {
+                "japanese": "    メニューを見せてください (Menyu o misete kudasai)",
+                "english": "Please show me the menu."
+            },
+            {
+                "japanese": "    チェックをください (Chekku o kudasai)",
+                "english": "Check, please."
+            },
+            {
+                "japanese": "    電話番号は何ですか (Denwa bangou wa nan desu ka?)",
+                "english": "What's your phone number?"
+            },
+            {
+                "japanese": "    予約したい (Yoyaku shitai)",
+                "english": "I'd like to make a reservation."
+            },
+            {
+                "japanese": "    無料ですか (Muryou desu ka?)",
+                "english": "Is it free?"
+            },
+            {
+                "japanese": "    ホテルはどこですか (Hoteru wa doko desu ka?)",
+                "english": "Where is the hotel?"
+            },
+            {
+                "japanese": "    Wi-Fiのパスワードは何ですか (Wi-Fi no pasuwādo wa nan desu ka?)",
+                "english": "What's the Wi-Fi password?"
+            },
+            {
+                "japanese": "    すぐに (Sugu ni)",
+                "english": "Right away."
+            },
+            {
+                "japanese": "    ゆっくり (Yukkuri)",
+                "english": "Slowly."
+            },
+            {
+                "japanese": "    大丈夫 (Daijoubu)",
+                "english": "It's okay."
+            },
+            {
+                "japanese": "    違います (Chigaimasu)",
+                "english": "It's wrong."
+            },
+            {
+                "japanese": "    わたしの (Watashi no)",
+                "english": "Mine."
+            },
+            {
+                "japanese": "    いつ (Itsu?)",
+                "english": "When?"
+            },
+            {
+                "japanese": "    どうして (Doushite?)",
+                "english": "Why?"
+            },
+            {
+                "japanese": "    どこ (Doko?)",
+                "english": "Where?"
+            },
+            {
+                "japanese": "    誰 (Dare?)",
+                "english": "Who?"
+            },
+            {
+                "japanese": "    どう (Dou?)",
+                "english": "How?"
+            },
+            {
+                "japanese": "    何 (Nani?)",
+                "english": "What?"
+            },
+            {
+                "japanese": "    好きです (Suki desu)",
+                "english": "I like it."
+            },
+            {
+                "japanese": "    嫌いです (Kirai desu)",
+                "english": "I don't like it."
+            },
+            {
+                "japanese": "    もっと (Motto)",
+                "english": "More."
+            },
+            {
+                "japanese": "    それで (Sore de)",
+                "english": "And then?"
+            },
+            {
+                "japanese": "    こちら (Kochira)",
+                "english": "This way."
+            },
+            {
+                "japanese": "    あそこ (Asoko)",
+                "english": "Over there."
+            },
+            {
+                "japanese": "    今日 (Kyou)",
+                "english": "Today."
+            },
+            {
+                "japanese": "    明日 (Ashita)",
+                "english": "Tomorrow."
+            },
+            {
+                "japanese": "    昨日 (Kinou)",
+                "english": "Yesterday."
+            },
+            {
+                "japanese": "    いつも (Itsumo)",
+                "english": "Always."
+            },
+            {
+                "japanese": "    たまに (Tama ni)",
+                "english": "Sometimes."
+            },
+            {
+                "japanese": "    もう (Mou)",
+                "english": "Already."
+            },
+            {
+                "japanese": "    まだ (Mada)",
+                "english": "Not yet."
+            },
+            {
+                "japanese": "    ここ (Koko)",
+                "english": "Here."
+            },
+            {
+                "japanese": "    どうぞ (Douzo)",
+                "english": "Please (when offering something)."
+            },
+            {
+                "japanese": "    よろしくお願いします (Yoroshiku onegaishimasu)",
+                "english": "Nice to meet you / Please take care of it."
+            },
+            {
+                "japanese": "    遅い (Osoi)",
+                "english": "Late."
+            },
+            {
+                "japanese": "    早い (Hayai)",
+                "english": "Early."
+            },
+            {
+                "japanese": "    いい (Ii)",
+                "english": "Good."
+            },
+            {
+                "japanese": "    悪い (Warui)",
+                "english": "Bad."
+            },
+            {
+                "japanese": "    大きい (Ookii)",
+                "english": "Big."
+            },
+            {
+                "japanese": "    小さい (Chiisai)",
+                "english": "Small."
+            },
+            {
+                "japanese": "    長い (Nagai)",
+                "english": "Long."
+            },
+            {
+                "japanese": "    短い (Mijikai)",
+                "english": "Short."
+            },
+            {
+                "japanese": "    寒い (Samui)",
+                "english": "Cold."
+            },
+            {
+                "japanese": "    暑い (Atsui)",
+                "english": "Hot."
+            },
+            {
+                "japanese": "    眠い (Nemui)",
+                "english": "Sleepy."
+            },
+            {
+                "japanese": "    うるさい (Urusai)",
+                "english": "Noisy."
+            },
+            {
+                "japanese": "    静か (Shizuka)",
+                "english": "Quiet."
+            },
+            {
+                "japanese": "    甘い (Amai)",
+                "english": "Sweet."
+            },
+            {
+                "japanese": "    辛い (Karai)",
+                "english": "Spicy."
+            },
+            {
+                "japanese": "    楽しい (Tanoshii)",
+                "english": "Fun."
+            },
+            {
+                "japanese": "    つまらない (Tsumaranai)",
+                "english": "Boring."
+            },
+            {
+                "japanese": "    新しい (Atarashii)",
+                "english": "New."
+            },
+            {
+                "japanese": "    古い (Furui)",
+                "english": "Old."
+            },
+            {
+                "japanese": "    近い (Chikai)",
+                "english": "Near."
+            },
+            {
+                "japanese": "    遠い (Tooi)",
+                "english": "Far."
+            },
+            {
+                "japanese": "    綺麗 (Kirei)",
+                "english": "Beautiful."
+            },
+            {
+                "japanese": "    汚い (Kitanai)",
+                "english": "Dirty."
+            },
+            {
+                "japanese": "    明るい (Akarui)",
+                "english": "Bright."
+            },
+            {
+                "japanese": "    暗い (Kurai)",
+                "english": "Dark."
+            },
+            {
+                "japanese": "    高い (Takai)",
+                "english": "Tall."
+            },
+            {
+                "japanese": "    低い (Hikui)",
+                "english": "Short (in height)."
+            },
+            {
+                "japanese": "    若い (Wakai)",
+                "english": "Young."
+            },
+            {
+                "japanese": "    友達 (Tomodachi)",
+                "english": "Friend."
+            },
+            {
+                "japanese": "    家族 (Kazoku)",
+                "english": "Family."
+            },
+            {
+                "japanese": "    愛しています (Aishiteimasu)",
+                "english": "I love you."
+            },
+
+        ]
+
+
 
         let currentSentence = {};
         let mistakes = {};
