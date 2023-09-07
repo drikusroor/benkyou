@@ -102,7 +102,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | 汚い (Kitanai)                                                | Dirty.                                     |        |
 | 明るい (Akarui)                                                | Bright.                                    |        |
 | 暗い (Kurai)                                                  | Dark.                                      |        |
-| 高い (Takai)                                                  | Tall.                                      |        |
+| 高い (Takai)                                                  | Tall.                                      |  High.      |
 | 低い (Hikui)                                                  | Short (in height).                         |        |
 | 若い (Wakai)                                                  | Young.                                     |        |
 | 友達 (Tomodachi)                                              | Friend.                                    |        |
