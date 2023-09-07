@@ -658,7 +658,7 @@
         }
 
         function getNextSentence() {
-            let prioritizedSentences = sentences.filter(s => mistakes[s.english] && mistakes[s.english] > 1);
+            let prioritizedSentences = sentences.filter(s => mistakes[s.japanese] && mistakes[s.japanese] > 1);
 
             if (prioritizedSentences.length) {
                 return prioritizedSentences[Math.floor(Math.random() * prioritizedSentences.length)];
@@ -701,18 +701,20 @@
             const userAnswer = document.getElementById('answer').value.trim();
             const feedback = document.getElementById('feedback');
 
-            // The threshold can be adjusted based on your preferences.
-            if (levenshtein(userAnswer, currentSentence.english) <= 2) {
+            // Check against each possible English translation
+            let isCorrect = currentSentence.english.some(translation => levenshtein(userAnswer, translation) <= 2);
+
+            if (isCorrect) {
                 feedback.textContent = "Correct!";
-                if (mistakes[currentSentence.english]) {
-                    mistakes[currentSentence.english]--;
+                if (mistakes[currentSentence.japanese]) {
+                    mistakes[currentSentence.japanese]--;
                 }
             } else {
-                feedback.textContent = "Incorrect! Correct answer: " + currentSentence.english;
-                if (!mistakes[currentSentence.english]) {
-                    mistakes[currentSentence.english] = 1;
+                feedback.textContent = "Incorrect! Correct answers: " + currentSentence.english.join(', ');
+                if (!mistakes[currentSentence.japanese]) {
+                    mistakes[currentSentence.japanese] = 1;
                 } else {
-                    mistakes[currentSentence.english]++;
+                    mistakes[currentSentence.japanese]++;
                 }
             }
 
