@@ -658,7 +658,7 @@
         }
 
         function getNextSentence() {
-            let prioritizedSentences = sentences.filter(s => mistakes[s.japanese] && mistakes[s.japanese] > 1);
+            let prioritizedSentences = sentences.filter(s => mistakes[s.q] && mistakes[s.q] > 1);
 
             if (prioritizedSentences.length) {
                 return prioritizedSentences[Math.floor(Math.random() * prioritizedSentences.length)];
@@ -702,19 +702,19 @@
             const feedback = document.getElementById('feedback');
 
             // Check against each possible English translation
-            let isCorrect = currentSentence.english.some(translation => levenshtein(userAnswer, translation) <= 2);
+            let isCorrect = currentSentence.a.some(translation => levenshtein(userAnswer, translation) <= 2);
 
             if (isCorrect) {
                 feedback.textContent = "Correct!";
-                if (mistakes[currentSentence.japanese]) {
-                    mistakes[currentSentence.japanese]--;
+                if (mistakes[currentSentence.q]) {
+                    mistakes[currentSentence.q]--;
                 }
             } else {
-                feedback.textContent = "Incorrect! Correct answers: " + currentSentence.english.join(', ');
-                if (!mistakes[currentSentence.japanese]) {
-                    mistakes[currentSentence.japanese] = 1;
+                feedback.textContent = "Incorrect! Correct answers: " + currentSentence.a.join(', ');
+                if (!mistakes[currentSentence.q]) {
+                    mistakes[currentSentence.q] = 1;
                 } else {
-                    mistakes[currentSentence.japanese]++;
+                    mistakes[currentSentence.q]++;
                 }
             }
 
@@ -730,7 +730,7 @@
 
         function loadNextSentence() {
             currentSentence = getNextSentence();
-            document.getElementById('question').textContent = currentSentence.japanese;
+            document.getElementById('question').textContent = currentSentence.q;
             document.getElementById('answer').value = '';
             document.getElementById('feedback').textContent = '';
         }
