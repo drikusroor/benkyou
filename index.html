@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Learn Japanese</title>
     <style>
         body {
@@ -14,13 +15,31 @@
 </head>
 
 <body>
-    <h1>Learn Japanese</h1>
-    <form id="answerForm">
-        <div id="question"></div>
-        <input type="text" id="answer" placeholder="Type your answer">
-        <button type="submit">Submit</button>
-        <div id="feedback"></div>
+    <div class="min-h-screen bg-black flex flex-col items-center justify-center p-5">
+        <div class="bg-black bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600">
+            <h1 class="text-4xl font-bold mb-4 text-pink-400">Learn Japanese</h1>
+            <h2 class="text-2xl font-semibold mb-6 text-purple-500 tracking-wider">100 most important Japanese sentences
+                and words</h2>
+
+            <form id="answerForm" class="space-y-4">
+                <div id="question" class="text-xl text-white font-medium"></div>
+
+                <div>
+                    <input type="text" id="answer" placeholder="Type your answer"
+                        class="w-full p-3 border border-purple-400 bg-opacity-50 bg-black text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out">
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out">
+                        Submit
+                    </button>
+                </div>
+
+                <div id="feedback" class="text-lg text-pink-400 font-medium"></div>
     </form>
+        </div>
+    </div>
 
     <script>
         const dataAsString = `
