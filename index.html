@@ -1202,7 +1202,7 @@
 
             if (isCorrect) {
                 const correctTranslation = getTranslation('correct', 'Correct!');
-                feedback.textContent = `✅ ${correctTranslation} (${correctAnswers})`;
+                feedback.textContent = `✅ ${correctTranslation} ${correctAnswers}`;
                 if (mistakes[currentSentence.q]) {
                     mistakes[currentSentence.q]--;
                 }
