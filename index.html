@@ -717,7 +717,7 @@
             let isCorrect = currentSentence.a.some(translation => levenshtein(userAnswer, translation) <= 2);
 
             if (isCorrect) {
-                feedback.textContent = "Correct! " + `${currentSentence.a.join(', ')}`;
+                feedback.textContent = `Correct! ${currentSentence.a.join(', ')}`;
                 if (mistakes[currentSentence.q]) {
                     mistakes[currentSentence.q]--;
                 }
