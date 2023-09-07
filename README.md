@@ -6,7 +6,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 
 ## Current list of words & sentences
 
-| Japanese (with Romaji)                                                           | English0                                        | English (alternative)    |
+| Japanese (with Romaji)                                                           | English                                        | English (alternative)    |
 | ----------------------------------------------------------- | ------------------------------------------ | ------ |
 | こんにちは (Konnichiwa)                                          | Hello.                                     |        |
 | こんばんは (Konbanwa)                                            | Good evening.                              |        |
