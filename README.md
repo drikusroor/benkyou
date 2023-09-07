@@ -5,7 +5,7 @@
 
 Hyaku is a mini web application to practice the 100 most important japanese words &amp; sentences. It tracks the mistakes you make and then prioritizes those words.
 
-You can visit the site at: <https://drikusroor.github.io/benkyou/>
+You can visit the site at: <https://drikusroor.github.io/hyaku/>
 
 ## Languages and modes
 
