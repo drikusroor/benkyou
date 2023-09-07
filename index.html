@@ -1153,6 +1153,7 @@
         function getNextSentence() {
             let prioritizedSentences = sentences
                 .filter(sentence => sentence.q !== currentSentence.q)
+                .sort(() => Math.random() - 0.5)
                 .sort((a, b) => {
                     if (mistakes[a.q] && mistakes[b.q]) {
                         return mistakes[a.q] - mistakes[b.q];
