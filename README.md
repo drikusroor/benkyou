@@ -76,7 +76,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | まだ (Mada)                                                   | Not yet.                                   |        |
 | ここ (Koko)                                                   | Here.                                      |        |
 | どうぞ (Douzo)                                                 | Please (when offering something).          |        |
-| よろしくお願いします (Yoroshiku onegaishimasu)                        | Nice to meet you / Please take care of it. |        |
+| よろしくお願いします (Yoroshiku onegaishimasu)                        | Nice to meet you  | Please take care of it.       |
 | 遅い (Osoi)                                                   | Late.                                      |        |
 | 早い (Hayai)                                                  | Early.                                     |        |
 | いい (Ii)                                                     | Good.                                      |        |
