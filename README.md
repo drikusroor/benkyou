@@ -24,7 +24,7 @@ You can visit the site at: https://drikusroor.github.io/benkyou/
 | 日本語が分かりません (Nihongo ga wakarimasen)                         | I don't understand Japanese.               |        |
 | 英語を話せますか (Eigo o hanasemasu ka?)                            | Can you speak English?                     |        |
 | トイレはどこですか (Toire wa doko desu ka?)                          | Where is the bathroom?                     |        |
-| 水をください (Mizu o kudasai)                                     | Please give me water.                      |        |
+| 水をください (Mizu o kudasai)                                     | Please give me water.                      |  Please give me some water. / Water, please.      |
 | いくらですか (Ikura desu ka?)                                     | How much is it?                            |  How much does it cost?      |
 | 高いです (Takai desu)                                           | It's expensive.                            |        |
 | 安いです (Yasui desu)                                           | It's cheap.                                |        |
