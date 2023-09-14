@@ -35,8 +35,15 @@
             </div>
         </div>
 
-        <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900 transition-colors"
+        <div class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900 transition-colors relative"
             id="questionBox">
+            <!-- display streak of correct answers in top right corner, rounded, with a pink background
+                position it over the corner of the box
+             -->
+            <div
+                class="flex items-center justify-center absolute -top-3 -right-3 md:-top-6 md:-right-6 w-12 h-12 rounded-full bg-pink-600 text-white px-4 py-2 text-sm font-medium tracking-wider">
+                <span id="streak">0</span>
+            </div>
             <h1 id="title" class="text-4xl font-bold mb-2 text-pink-400">百 - Hyaku</h1>
             <h2 id="subTitle" class="text-md font-semibold mb-6 text-purple-500 tracking-wider">Learn the 100 most
                 important
@@ -1221,6 +1228,22 @@
             return matrix[b.length][a.length];
         }
 
+        function updateStreak(increment = false) {
+            const streakEl = document.querySelector('#streak');
+            const streakContainer = streakEl.parentElement;
+            const streak = parseInt(streakEl.textContent);
+
+            if (increment) {
+                streakEl.textContent = streak + 1;
+                streakContainer.classList.remove('bg-pink-500');
+                streakContainer.classList.add('bg-green-500');
+            } else {
+                streakEl.textContent = 0;
+                streakContainer.classList.remove('bg-green-500');
+                streakContainer.classList.add('bg-pink-500');
+            }
+        }
+
         function checkAnswer() {
             const questionBox = document.getElementById('questionBox');
             const userAnswer = document.getElementById('answer').value.trim();
@@ -1252,6 +1275,7 @@
                 submitAnswerButton.textContent = getTranslation('nextQuestion', "Next question");
                 correctAudio.play();
                 questionBox.classList.add('border-green-500');
+                updateStreak(true);
             } else {
                 const incorrectTranslation = getTranslation('incorrect', 'Incorrect! Correct answers: ');
                 feedback.textContent = `❌ ${incorrectTranslation} ${correctAnswers}`;
@@ -1264,6 +1288,7 @@
                 submitAnswerButton.textContent = getTranslation('nextQuestion', "Next question");
                 incorrectAudio.play();
                 questionBox.classList.add('border-red-500');
+                updateStreak(false);
             }
 
             localStorage.setItem('mistakes', JSON.stringify(mistakes));
