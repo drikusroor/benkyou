@@ -96,7 +96,7 @@
             }
         }
 
-        const sentences = [
+        const sentences = shuffle([
             {
                 "q": "こんにちは (Konnichiwa)",
                 "en": [
@@ -1063,7 +1063,7 @@
                     "Ik hou van je."
                 ]
             }
-        ]
+        ]);
 
         function getCurrentLanguage() {
             return new URLSearchParams(window.location.search).get('lang') || 'en';
