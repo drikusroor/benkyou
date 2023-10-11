@@ -1,11 +1,32 @@
 <script>
-	import { browser } from '$app/environment';
+	
+	import { onMount } from 'svelte';
 
-	if (browser) {
-		const currentLanguage = getCurrentLanguage();
-		const learningMode = getMode();
+	let sentences = [];
+	let filteredSentences = [];
 
-		const translations = {
+	let translations;
+	let currentLanguage;
+	let learningMode;
+
+	let searchInputValue = '';
+
+	function handleSearchInput() {
+		const searchTerm = searchInputValue;
+
+		filteredSentences = sentences.filter((sentence) => {
+			return (
+				sentence.q.toLowerCase().includes(searchTerm) ||
+				sentence[currentLanguage].join(' / ').toLowerCase().includes(searchTerm)
+			)
+		});
+	}
+
+	onMount(() => {
+		currentLanguage = getCurrentLanguage();
+		learningMode = getMode();
+
+		translations = {
 			nl: {
 				title: '百 - Hyaku',
 				mostImportantWords: 'Leer de 100 belangrijkste Japanse zinnen en woorden',
@@ -19,7 +40,7 @@
 			}
 		};
 
-		const sentences = shuffle([
+		sentences = shuffle([
 			{
 				q: 'こんにちは (Konnichiwa)',
 				en: ['Hello.'],
@@ -527,6 +548,7 @@
 				nl: ['Ik hou van je.']
 			}
 		]);
+		filteredSentences = [...sentences]
 
 		function getCurrentLanguage() {
 			return new URLSearchParams(window.location.search).get('lang') || 'en';
@@ -768,15 +790,15 @@
 			currentTimeout = setTimeout(loadNextSentence, 3500);
 		}
 
-		document.getElementById('answerForm').addEventListener('submit', (e) => {
-			e.preventDefault();
+		// document.getElementById('answerForm').addEventListener('submit', (e) => {
+		// 	e.preventDefault();
 
-			if (isFeedbackDisplayed) {
-				loadNextSentence();
-			} else {
-				checkAnswer();
-			}
-		});
+		// 	if (isFeedbackDisplayed) {
+		// 		loadNextSentence();
+		// 	} else {
+		// 		checkAnswer();
+		// 	}
+		// });
 
 		function loadNextSentence() {
 			currentTimeout ? clearTimeout(currentTimeout) : null;
@@ -794,68 +816,6 @@
 
 		loadNextSentence();
 
-		function initializeCheatsheet() {
-			const currentLanguage = getCurrentLanguage();
-
-			const cheatsheet = document.getElementById('cheatsheet');
-
-			sentences.forEach((sentence) => {
-				const li = document.createElement('li');
-				li.classList.add(
-					'bg-slate-800',
-					'p-4',
-					'rounded-md',
-					'shadow-md',
-					'text-white',
-					'text-lg',
-					'font-medium',
-					'flex',
-					'items-center',
-					'justify-between'
-				);
-				li.innerHTML = `
-                <div class="text-xl">${sentence.q}</div>
-                <div class="text-pink-400">${sentence[currentLanguage].join(' / ')}</div>
-            `;
-				cheatsheet.appendChild(li);
-			});
-		}
-
-		initializeCheatsheet();
-
-		document.getElementById('searchCheatsheet').addEventListener('input', (e) => {
-			const searchTerm = e.target.value.trim().toLowerCase();
-			const cheatsheet = document.getElementById('cheatsheet');
-
-			cheatsheet.innerHTML = '';
-
-			sentences.forEach((sentence) => {
-				if (
-					sentence.q.toLowerCase().includes(searchTerm) ||
-					sentence[currentLanguage].join(' / ').toLowerCase().includes(searchTerm)
-				) {
-					const li = document.createElement('li');
-					li.classList.add(
-						'bg-slate-800',
-						'p-4',
-						'rounded-md',
-						'shadow-md',
-						'text-white',
-						'text-lg',
-						'font-medium',
-						'flex',
-						'items-center',
-						'justify-between'
-					);
-					li.innerHTML = `
-                    <div class="text-xl">${sentence.q}</div>
-                    <div class="text-pink-400">${sentence[currentLanguage].join(' / ')}</div>
-                `;
-					cheatsheet.appendChild(li);
-				}
-			});
-		});
-
 		const getReadableSentencesForMarkdownTable = () =>
 			sentences.map((s) => {
 				return {
@@ -864,7 +824,7 @@
 					Dutch: s.nl.join(', ')
 				};
 			});
-	}
+	});
 </script>
 
 <div class="min-h-screen bg-black flex flex-col items-center justify-center p-5">
@@ -937,10 +897,22 @@
 				id="searchCheatsheet"
 				placeholder="Search"
 				class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
+				bind:value={searchInputValue}
+				on:input={handleSearchInput}
 			/>
 		</form>
 
-		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4" id="cheatsheet" />
+		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4" id="cheatsheet">
+			{#each filteredSentences as sentence}
+			<li class="bg-slate-800 p-4 rounded-md shadow-md text-white text-lg font-medium flex items-center justify-between">
+
+				<div class="text-xl">{sentence.q}</div>
+                <div class="text-pink-400">{sentence[currentLanguage].join(' / ')}</div>
+
+			</li>
+			{/each}
+
+		</ul>
 	</div>
 </div>
 
