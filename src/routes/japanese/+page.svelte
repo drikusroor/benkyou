@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	let sentences = [];
+	interface Sentence {
+		q: string;
+		en: string[];
+		nl: string[];
+	}
+
+	let sentences: Sentence[];
 	let translations;
 	let currentLanguage;
 	let learningMode;
@@ -84,7 +90,7 @@
 		return translations[currentLanguage][key] || defaultValue;
 	}
 
-	function shuffle(array) {
+	function shuffle<T>(array: T[] = []): T[] {
 		let currentIndex = array.length,
 			randomIndex;
 
