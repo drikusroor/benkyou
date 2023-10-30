@@ -1,37 +1,61 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	import dataJson from './data.json';
+
+	type TranslationKeys =
+		| 'title'
+		| 'mostImportantWords'
+		| 'answer'
+		| 'submitAnswerButton'
+		| 'correct'
+		| 'incorrect'
+		| 'correctAnswers'
+		| 'nextQuestion'
+		| 'search';
+
+	interface FlashCardsConfigurationData {
+		translations: {
+			[language: string]: { [key in TranslationKeys]: string };
+		};
+		questions: Sentence[];
+	}
+
+	const data: FlashCardsConfigurationData = dataJson;
+
 	interface Sentence {
 		q: string;
 		en: string[];
 		nl: string[];
 	}
 
-	let sentences: Sentence[];
-	let translations;
-	let currentLanguage;
-	let learningMode;
+	type Mistakes = { [question: string]: number };
+
+	let sentences: FlashCardsConfigurationData['questions'];
+	let translations: FlashCardsConfigurationData['translations'];
+	let currentLanguage: 'en' | 'nl';
+	let learningMode: 'from' | 'to';
 
 	// QA flow related
 	let questionBoxClasses = '';
 	let questionText = '';
 	let answerInputValue = '';
-	let currentSentence = {};
-	let mistakes = {};
+	let currentSentence: Sentence;
+	let mistakes: Mistakes = {};
 	let isFeedbackDisplayed = false;
 	let currentTimeout: NodeJS.Timeout;
 	let submitAnswerButtonText = '';
 	let feedbackText = '';
 
 	// Cheatsheet / search related
-	let filteredSentences = [];
+	let filteredSentences: FlashCardsConfigurationData['questions'] = [];
 	let searchInputValue = '';
 
 	// Streak related
 	let streakText = 0;
 	let streakClasses = 'hidden';
 
-	function handleAnswerSubmit(e) {
+	function handleAnswerSubmit(e: Event) {
 		e.preventDefault();
 
 		if (isFeedbackDisplayed) {
@@ -45,19 +69,17 @@
 		currentTimeout ? clearTimeout(currentTimeout) : null;
 		currentSentence = getNextSentence();
 		questionText =
-			learningMode === 'fromJapanese'
-				? currentSentence.q
-				: currentSentence[currentLanguage].join(' / ');
+			learningMode === 'from' ? currentSentence.q : currentSentence[currentLanguage].join(' / ');
 		answerInputValue = '';
 		feedbackText = '';
 		isFeedbackDisplayed = false;
 		submitAnswerButtonText = getTranslation('submitAnswerButton', 'Submit');
-		questionBoxClasses ='border-purple-600';
+		questionBoxClasses = 'border-purple-600';
 	}
 
 	function getNextSentence() {
 		let prioritizedSentences = shuffle(sentences)
-			.filter((sentence) => sentence.q !== currentSentence.q)
+			.filter((sentence) => sentence.q !== currentSentence?.q)
 			.sort((a, b) => {
 				if (mistakes[a.q] && mistakes[b.q]) {
 					return mistakes[a.q] - mistakes[b.q];
@@ -82,12 +104,22 @@
 		return sentences[Math.floor(Math.random() * sentences.length)];
 	}
 
-	function getTranslation(key, defaultValue) {
+	function getTranslation(key: TranslationKeys, defaultValue?: string) {
 		if (currentLanguage === 'en') {
 			return defaultValue ? defaultValue : key;
 		}
 
-		return translations[currentLanguage][key] || defaultValue;
+		const translation =  translations[currentLanguage][key];
+
+		if (translation) {
+			return translation;
+		}
+
+		if (defaultValue) {
+			return defaultValue;
+		}
+
+		return `{{${key}}}`
 	}
 
 	function shuffle<T>(array: T[] = []): T[] {
@@ -107,7 +139,7 @@
 		return array;
 	}
 
-	function levenshtein(a, b) {
+	function levenshtein(a: string, b: string) {
 		const matrix = [];
 
 		if (a.length == 0) return b.length;
@@ -147,8 +179,7 @@
 		}
 	}
 
-	function checkAnswer(answer = '') {
-		const questionBox = document.getElementById('questionBox');
+	function checkAnswer() {
 		const userAnswer = answerInputValue.trim();
 		const correctAudio = document.getElementById('correctAudio');
 		const incorrectAudio = document.getElementById('incorrectAudio');
@@ -158,19 +189,18 @@
 			return;
 		}
 
-		if (learningMode === 'fromJapanese') {
+		if (learningMode === 'from') {
 			isCorrect = currentSentence[currentLanguage].some(
 				(translation) => levenshtein(userAnswer.toLowerCase(), translation.toLowerCase()) <= 2
 			);
 		} else {
-			const romajiAnswer = currentSentence.q.match(/\((.*?)\)/)[1];
+			const romajiAnswerMatches = currentSentence.q.match(/\((.*?)\)/);
+			const romajiAnswer = romajiAnswerMatches ? romajiAnswerMatches[1] : '';
 			isCorrect = levenshtein(userAnswer.toLowerCase(), romajiAnswer.toLowerCase()) <= 2;
 		}
 
 		const correctAnswers =
-			learningMode === 'fromJapanese'
-				? currentSentence[currentLanguage].join(', ')
-				: currentSentence.q;
+			learningMode === 'from' ? currentSentence[currentLanguage].join(', ') : currentSentence.q;
 
 		if (isCorrect) {
 			const correctTranslation = getTranslation('correct', 'Correct!');
@@ -220,532 +250,19 @@
 		currentLanguage = getCurrentLanguage();
 		learningMode = getMode();
 
-		translations = {
-			nl: {
-				title: '百 - Hyaku',
-				mostImportantWords: 'Leer de 100 belangrijkste Japanse zinnen en woorden',
-				answer: 'Typ je antwoord',
-				submitAnswerButton: 'Verstuur',
-				correct: 'Correct!',
-				incorrect: 'Incorrect! Correcte antwoord(en): ',
-				correctAnswers: 'Correcte antwoorden: ',
-				nextQuestion: 'Volgende vraag',
-				search: 'Zoeken'
-			}
-		};
+		translations = data.translations;
 
-		sentences = shuffle([
-			{
-				q: 'こんにちは (Konnichiwa)',
-				en: ['Hello.'],
-				nl: ['Hallo.']
-			},
-			{
-				q: 'こんばんは (Konbanwa)',
-				en: ['Good evening.'],
-				nl: ['Goedenavond.']
-			},
-			{
-				q: 'さようなら (Sayonara)',
-				en: ['Goodbye.'],
-				nl: ['Tot ziens.', 'Vaarwel.']
-			},
-			{
-				q: 'ありがとうございます (Arigatou gozaimasu)',
-				en: ['Thank you.', 'Thank you very much.', 'Thanks.'],
-				nl: ['Dank je.', 'Dank je wel.', 'Bedankt.']
-			},
-			{
-				q: 'はい (Hai)',
-				en: ['Yes.'],
-				nl: ['Ja.']
-			},
-			{
-				q: 'いいえ (Iie)',
-				en: ['No.'],
-				nl: ['Nee.']
-			},
-			{
-				q: 'すみません (Sumimasen)',
-				en: ['Excuse me.'],
-				nl: ['Pardon.', 'Sorry.']
-			},
-			{
-				q: 'おはようございます (Ohayou gozaimasu)',
-				en: ['Good morning.'],
-				nl: ['Goedemorgen.']
-			},
-			{
-				q: 'おやすみなさい (Oyasuminasai)',
-				en: ['Goodnight.'],
-				nl: ['Goedenacht.']
-			},
-			{
-				q: 'お名前は何ですか (Onamae wa nan desu ka?)',
-				en: ["What's your name?"],
-				nl: ['Hoe heet je?', 'Wat is je naam?']
-			},
-			{
-				q: 'わたしは Yuri です (Watashi wa Yuri desu)',
-				en: ['I am Yuri.'],
-				nl: ['Ik ben Yuri.', 'Mijn naam is Yuri.']
-			},
-			{
-				q: 'どこから来ましたか (Doko kara kimashita ka?)',
-				en: ['Where are you from?'],
-				nl: ['Waar kom je vandaan?']
-			},
-			{
-				q: 'わたしは [country] から来ました (Watashi wa [country] kara kimashita)',
-				en: ["I'm from [country].", 'I came from [country].'],
-				nl: ['Ik kom uit [country].']
-			},
-			{
-				q: '日本語が分かりません (Nihongo ga wakarimasen)',
-				en: ["I don't understand Japanese."],
-				nl: ['Ik spreek geen Japans.', 'Ik versta geen Japans.']
-			},
-			{
-				q: '英語を話せますか (Eigo o hanasemasu ka?)',
-				en: ['Can you speak English?', 'Do you speak English?'],
-				nl: ['Spreek je Engels?', 'Kun je Engels spreken?']
-			},
-			{
-				q: 'トイレはどこですか (Toire wa doko desu ka?)',
-				en: ['Where is the bathroom?', 'Where is the toilet?'],
-				nl: ['Waar is het toilet?', 'Waar is de wc?']
-			},
-			{
-				q: '水をください (Mizu o kudasai)',
-				en: ['Please give me water.', 'Please give me some water.', 'Water, please.'],
-				nl: ['Water, alstublieft.']
-			},
-			{
-				q: 'いくらですか (Ikura desu ka?)',
-				en: ['How much is it?', 'How much does it cost?'],
-				nl: ['Hoeveel kost het?', 'Hoeveel is het?', 'Wat kost het?', 'Hoe duur is het?']
-			},
-			{
-				q: '高いです (Takai desu)',
-				en: ["It's expensive."],
-				nl: ['Het is duur.']
-			},
-			{
-				q: '安いです (Yasui desu)',
-				en: ["It's cheap."],
-				nl: ['Het is goedkoop.']
-			},
-			{
-				q: '美味しい (Oishii)',
-				en: ['Delicious.', 'Tasty.'],
-				nl: ['Lekker.', 'Smaakvol.']
-			},
-			{
-				q: 'お腹がすいた (Onaka ga suita)',
-				en: ["I'm hungry."],
-				nl: ['Ik heb honger.']
-			},
-			{
-				q: 'のどが渇いた (Nodo ga kawaita)',
-				en: ["I'm thirsty."],
-				nl: ['Ik heb dorst.']
-			},
-			{
-				q: '駅はどこですか (Eki wa doko desu ka?)',
-				en: ['Where is the station?'],
-				nl: ['Waar is het station?']
-			},
-			{
-				q: 'これをください (Kore o kudasai)',
-				en: ["I'll take this."],
-				nl: ['Ik neem deze.']
-			},
-			{
-				q: '助けて (Tasukete)',
-				en: ['Help!'],
-				nl: ['Help!']
-			},
-			{
-				q: '病院はどこですか (Byouin wa doko desu ka?)',
-				en: ['Where is the hospital?'],
-				nl: ['Waar is het ziekenhuis?']
-			},
-			{
-				q: '痛い (Itai)',
-				en: ['It hurts.'],
-				nl: ['Het doet pijn.']
-			},
-			{
-				q: 'どれ (Dore?)',
-				en: ['Which one?', 'Which?'],
-				nl: ['Welke?']
-			},
-			{
-				q: '今何時ですか (Ima nanji desu ka?)',
-				en: ['What time is it now?', "What's the time?"],
-				nl: ['Hoe laat is het nu?']
-			},
-			{
-				q: '日本は初めてです (Nihon wa hajimete desu)',
-				en: ["It's my first time in Japan."],
-				nl: ['Het is mijn eerste keer in Japan.']
-			},
-			{
-				q: 'また会いましょう (Mata aimashou)',
-				en: ["Let's meet again."],
-				nl: ['Laten we elkaar weer ontmoeten.', 'Laten we weer afspreken.']
-			},
-			{
-				q: '分かりました (Wakarimashita)',
-				en: ['I understand.'],
-				nl: ['Ik begrijp het.']
-			},
-			{
-				q: 'もう一度言ってください (Mou ichido itte kudasai)',
-				en: ['Please say it one more time.'],
-				nl: ['Zeg het nog een keer, alstublieft.']
-			},
-			{
-				q: 'インターネットがつながりません (Inta-netto ga tsunagari masen)',
-				en: ["The internet isn't working."],
-				nl: ['Het internet werkt niet.']
-			},
-			{
-				q: 'メニューを見せてください (Menyu o misete kudasai)',
-				en: ['Please show me the menu.', 'The menu, please.'],
-				nl: ['Laat me de menukaart zien, alstublieft.', 'De menukaart, alstublieft.']
-			},
-			{
-				q: 'チェックをください (Chekku o kudasai)',
-				en: ['Check, please.'],
-				nl: ['De rekening, alstublieft.']
-			},
-			{
-				q: '電話番号は何ですか (Denwa bangou wa nan desu ka?)',
-				en: ["What's your phone number?"],
-				nl: ['Wat is je telefoonnummer?']
-			},
-			{
-				q: '予約したい (Yoyaku shitai)',
-				en: ["I'd like to make a reservation.", 'I want to make a reservation.'],
-				nl: ['Ik wil graag een reservering maken.', 'Ik wil graag reserveren.']
-			},
-			{
-				q: '無料ですか (Muryou desu ka?)',
-				en: ['Is it free?'],
-				nl: ['Is het gratis?']
-			},
-			{
-				q: 'ホテルはどこですか (Hoteru wa doko desu ka?)',
-				en: ['Where is the hotel?'],
-				nl: ['Waar is het hotel?']
-			},
-			{
-				q: 'Wi-Fiのパスワードは何ですか (Wi-Fi no pasuwādo wa nan desu ka?)',
-				en: ["What's the Wi-Fi password?"],
-				nl: ['Wat is het Wi-Fi wachtwoord?']
-			},
-			{
-				q: 'すぐに (Sugu ni)',
-				en: ['Right away.'],
-				nl: ['Onmiddellijk.', 'Direct.']
-			},
-			{
-				q: 'ゆっくり (Yukkuri)',
-				en: ['Slowly.'],
-				nl: ['Langzaam.']
-			},
-			{
-				q: '大丈夫 (Daijoubu)',
-				en: ["It's okay."],
-				nl: ['Het is goed.', 'Het is oké.']
-			},
-			{
-				q: '違います (Chigaimasu)',
-				en: ["It's wrong."],
-				nl: ['Het is fout.', 'Het is verkeerd.']
-			},
-			{
-				q: 'わたしの (Watashi no)',
-				en: ['Mine.', 'My.'],
-				nl: ['Mijn.']
-			},
-			{
-				q: 'いつ (Itsu?)',
-				en: ['When?'],
-				nl: ['Wanneer?']
-			},
-			{
-				q: 'どうして (Doushite?)',
-				en: ['Why?'],
-				nl: ['Waarom?']
-			},
-			{
-				q: 'どこ (Doko?)',
-				en: ['Where?'],
-				nl: ['Waar?']
-			},
-			{
-				q: '誰 (Dare?)',
-				en: ['Who?'],
-				nl: ['Wie?']
-			},
-			{
-				q: 'どう (Dou?)',
-				en: ['How?'],
-				nl: ['Hoe?']
-			},
-			{
-				q: '何 (Nani?)',
-				en: ['What?'],
-				nl: ['Wat?']
-			},
-			{
-				q: '好きです (Suki desu)',
-				en: ['I like it.'],
-				nl: ['Ik vind het leuk.', 'Ik vind het lekker.']
-			},
-			{
-				q: '嫌いです (Kirai desu)',
-				en: ["I don't like it."],
-				nl: ['Ik vind het niet leuk.', 'Ik vind het niet lekker.']
-			},
-			{
-				q: 'もっと (Motto)',
-				en: ['More.'],
-				nl: ['Meer.']
-			},
-			{
-				q: 'それで (Sore de)',
-				en: ['And then?'],
-				nl: ['En toen?']
-			},
-			{
-				q: 'こちら (Kochira)',
-				en: ['This way.'],
-				nl: ['Deze kant op.']
-			},
-			{
-				q: 'あそこ (Asoko)',
-				en: ['Over there.'],
-				nl: ['Daar.']
-			},
-			{
-				q: '今日 (Kyou)',
-				en: ['Today.'],
-				nl: ['Vandaag.']
-			},
-			{
-				q: '明日 (Ashita)',
-				en: ['Tomorrow.'],
-				nl: ['Morgen.']
-			},
-			{
-				q: '昨日 (Kinou)',
-				en: ['Yesterday.'],
-				nl: ['Gisteren.']
-			},
-			{
-				q: 'いつも (Itsumo)',
-				en: ['Always.'],
-				nl: ['Altijd.']
-			},
-			{
-				q: 'たまに (Tama ni)',
-				en: ['Sometimes.'],
-				nl: ['Soms.']
-			},
-			{
-				q: 'もう (Mou)',
-				en: ['Already.'],
-				nl: ['Al.', 'Alweer.']
-			},
-			{
-				q: 'まだ (Mada)',
-				en: ['Not yet.'],
-				nl: ['Nog niet.']
-			},
-			{
-				q: 'ここ (Koko)',
-				en: ['Here.'],
-				nl: ['Hier.']
-			},
-			{
-				q: 'どうぞ (Douzo)',
-				en: ['Please (when offering something).', 'Please', 'Here you go.'],
-				nl: ['Alstublieft (als je iets aanbiedt).', 'Alstublieft']
-			},
-			{
-				q: 'よろしくお願いします (Yoroshiku onegaishimasu)',
-				en: ['Nice to meet you', 'Please take care of it.'],
-				nl: [
-					'Aangenaam kennis te maken.',
-					'Leuk je te ontmoeten.',
-					'Dank je wel.',
-					'Dank u wel.',
-					'Bedankt.'
-				]
-			},
-			{
-				q: '遅い (Osoi)',
-				en: ['Late.'],
-				nl: ['Laat.']
-			},
-			{
-				q: '早い (Hayai)',
-				en: ['Early.', 'Fast.'],
-				nl: ['Vroeg.', 'Snel.']
-			},
-			{
-				q: 'いい (Ii)',
-				en: ['Good.', 'Fine.', 'Okay.', 'Nice.'],
-				nl: ['Goed.', 'Prima.', 'Oké.', 'Mooi.']
-			},
-			{
-				q: '悪い (Warui)',
-				en: ['Bad.'],
-				nl: ['Slecht.']
-			},
-			{
-				q: '大きい (Ookii)',
-				en: ['Big.'],
-				nl: ['Groot.']
-			},
-			{
-				q: '小さい (Chiisai)',
-				en: ['Small.'],
-				nl: ['Klein.']
-			},
-			{
-				q: '長い (Nagai)',
-				en: ['Long.'],
-				nl: ['Lang.']
-			},
-			{
-				q: '短い (Mijikai)',
-				en: ['Short.'],
-				nl: ['Kort.']
-			},
-			{
-				q: '寒い (Samui)',
-				en: ['Cold.'],
-				nl: ['Koud.']
-			},
-			{
-				q: '暑い (Atsui)',
-				en: ['Hot.'],
-				nl: ['Warm.']
-			},
-			{
-				q: '眠い (Nemui)',
-				en: ['Sleepy.'],
-				nl: ['Slaperig.']
-			},
-			{
-				q: 'うるさい (Urusai)',
-				en: ['Noisy.'],
-				nl: ['Luidruchtig.', 'Lawaaierig.']
-			},
-			{
-				q: '静か (Shizuka)',
-				en: ['Quiet.'],
-				nl: ['Stil.']
-			},
-			{
-				q: '甘い (Amai)',
-				en: ['Sweet.'],
-				nl: ['Zoet.']
-			},
-			{
-				q: '辛い (Karai)',
-				en: ['Spicy.'],
-				nl: ['Pittig.']
-			},
-			{
-				q: '楽しい (Tanoshii)',
-				en: ['Fun.'],
-				nl: ['Leuk.', 'Plezierig.']
-			},
-			{
-				q: 'つまらない (Tsumaranai)',
-				en: ['Boring.'],
-				nl: ['Saai.']
-			},
-			{
-				q: '新しい (Atarashii)',
-				en: ['New.'],
-				nl: ['Nieuw.']
-			},
-			{
-				q: '古い (Furui)',
-				en: ['Old.'],
-				nl: ['Oud.']
-			},
-			{
-				q: '近い (Chikai)',
-				en: ['Near.', 'Close.'],
-				nl: ['Dichtbij.']
-			},
-			{
-				q: '遠い (Tooi)',
-				en: ['Far.'],
-				nl: ['Ver.']
-			},
-			{
-				q: '綺麗 (Kirei)',
-				en: ['Beautiful.', 'Pretty.'],
-				nl: ['Mooi.', 'Prachtig.', 'Schoon.']
-			},
-			{
-				q: '汚い (Kitanai)',
-				en: ['Dirty.'],
-				nl: ['Vies.', 'Vuil.']
-			},
-			{
-				q: '明るい (Akarui)',
-				en: ['Bright.'],
-				nl: ['Helder.', 'Licht.']
-			},
-			{
-				q: '暗い (Kurai)',
-				en: ['Dark.'],
-				nl: ['Donker.', 'Duister.']
-			},
-			{
-				q: '高い (Takai)',
-				en: ['Tall.', 'High.'],
-				nl: ['Hoog.', 'Lang.']
-			},
-			{
-				q: '低い (Hikui)',
-				en: ['Short (in height).', 'Short', 'Low.'],
-				nl: ['Laag.', 'Klein.']
-			},
-			{
-				q: '若い (Wakai)',
-				en: ['Young.'],
-				nl: ['Jong.']
-			},
-			{
-				q: '友達 (Tomodachi)',
-				en: ['Friend.', 'Friends.'],
-				nl: ['Vriend.', 'Vrienden.']
-			},
-			{
-				q: '家族 (Kazoku)',
-				en: ['Family.'],
-				nl: ['Familie.']
-			},
-			{
-				q: '愛しています (Aishiteimasu)',
-				en: ['I love you.'],
-				nl: ['Ik hou van je.']
-			}
-		]);
+		sentences = shuffle(data.questions);
 		filteredSentences = [...sentences];
 
 		function getCurrentLanguage() {
-			return new URLSearchParams(window.location.search).get('lang') || 'en';
+			const lang = new URLSearchParams(window.location.search).get('lang');
+
+			if (lang !== 'en' && lang !== 'nl') {
+				return 'en';
+			}
+
+			return lang;
 		}
 
 		function translate() {
@@ -782,15 +299,15 @@
 		setLanguageSwitchState();
 
 		function setLearningModeSwitchState() {
-			const fromJapaneseLink = document.getElementById('fromJapaneseLink');
-			const toJapaneseLink = document.getElementById('toJapaneseLink');
+			const fromLink = document.getElementById('fromJapaneseLink');
+			const toLink = document.getElementById('toJapaneseLink');
 
-			if (learningMode === 'fromJapanese') {
-				fromJapaneseLink.classList.add('underline');
-				toJapaneseLink.classList.remove('underline');
+			if (learningMode === 'from') {
+				fromLink.classList.add('underline');
+				toLink.classList.remove('underline');
 			} else {
-				fromJapaneseLink.classList.remove('underline');
-				toJapaneseLink.classList.add('underline');
+				fromLink.classList.remove('underline');
+				toLink.classList.add('underline');
 			}
 		}
 
@@ -799,25 +316,23 @@
 		function updateLinksWithCurrentParams() {
 			const dutchLink = document.getElementById('dutchLink');
 			const englishLink = document.getElementById('englishLink');
-			const fromJapaneseLink = document.getElementById('fromJapaneseLink');
-			const toJapaneseLink = document.getElementById('toJapaneseLink');
+			const fromLink = document.getElementById('fromJapaneseLink');
+			const toLink = document.getElementById('toJapaneseLink');
 
 			dutchLink.href = `?lang=nl&mode=${learningMode}`;
 			englishLink.href = `?lang=en&mode=${learningMode}`;
-			fromJapaneseLink.href = `?lang=${currentLanguage}&mode=fromJapanese`;
-			toJapaneseLink.href = `?lang=${currentLanguage}&mode=toJapanese`;
+			fromLink.href = `?lang=${currentLanguage}&mode=from`;
+			toLink.href = `?lang=${currentLanguage}&mode=to`;
 		}
 
 		updateLinksWithCurrentParams();
 
 		function getMode() {
-			return new URLSearchParams(window.location.search).get('mode') === 'toJapanese'
-				? 'toJapanese'
-				: 'fromJapanese';
+			return new URLSearchParams(window.location.search).get('mode') === 'to' ? 'to' : 'from';
 		}
 
 		if (localStorage.getItem('mistakes')) {
-			mistakes = JSON.parse(localStorage.getItem('mistakes'));
+			mistakes = JSON.parse(localStorage.getItem('mistakes') || '{}') as Mistakes;
 		}
 
 		loadNextSentence();
