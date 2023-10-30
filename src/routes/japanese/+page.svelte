@@ -13,7 +13,7 @@
 	let currentSentence = {};
 	let mistakes = {};
 	let isFeedbackDisplayed = false;
-	let currentTimeout;
+	let currentTimeout: NodeJS.Timeout;
 	let submitAnswerButtonText = '';
 	let feedbackText = '';
 
