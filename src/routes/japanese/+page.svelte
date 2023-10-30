@@ -1,15 +1,203 @@
 <script>
-	
 	import { onMount } from 'svelte';
 
 	let sentences = [];
-	let filteredSentences = [];
-
 	let translations;
 	let currentLanguage;
 	let learningMode;
 
+	// QA flow related
+	let questionBoxClasses = '';
+	let questionText = '';
+	let answerInputValue = '';
+	let currentSentence = {};
+	let mistakes = {};
+	let isFeedbackDisplayed = false;
+	let currentTimeout;
+	let submitAnswerButtonText = '';
+	let feedbackText = '';
+
+	// Cheatsheet / search related
+	let filteredSentences = [];
 	let searchInputValue = '';
+
+	// Streak related
+	let streakText = 0;
+	let streakClasses = 'hidden';
+
+	function handleAnswerSubmit(e) {
+		e.preventDefault();
+
+		if (isFeedbackDisplayed) {
+			loadNextSentence();
+		} else {
+			checkAnswer();
+		}
+	}
+
+	function loadNextSentence() {
+		currentTimeout ? clearTimeout(currentTimeout) : null;
+		currentSentence = getNextSentence();
+		questionText =
+			learningMode === 'fromJapanese'
+				? currentSentence.q
+				: currentSentence[currentLanguage].join(' / ');
+		answerInputValue = '';
+		feedbackText = '';
+		isFeedbackDisplayed = false;
+		submitAnswerButtonText = getTranslation('submitAnswerButton', 'Submit');
+		questionBoxClasses ='border-purple-600';
+	}
+
+	function getNextSentence() {
+		let prioritizedSentences = shuffle(sentences)
+			.filter((sentence) => sentence.q !== currentSentence.q)
+			.sort((a, b) => {
+				if (mistakes[a.q] && mistakes[b.q]) {
+					return mistakes[a.q] - mistakes[b.q];
+				}
+
+				if (mistakes[a.q]) {
+					return -1;
+				}
+
+				if (mistakes[b.q]) {
+					return 1;
+				}
+
+				return 0;
+			})
+			.slice(0, 10);
+
+		if (prioritizedSentences.length) {
+			return prioritizedSentences[Math.floor(Math.random() * prioritizedSentences.length)];
+		}
+
+		return sentences[Math.floor(Math.random() * sentences.length)];
+	}
+
+	function getTranslation(key, defaultValue) {
+		if (currentLanguage === 'en') {
+			return defaultValue ? defaultValue : key;
+		}
+
+		return translations[currentLanguage][key] || defaultValue;
+	}
+
+	function shuffle(array) {
+		let currentIndex = array.length,
+			randomIndex;
+
+		// While there remain elements to shuffle.
+		while (currentIndex > 0) {
+			// Pick a remaining element.
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex--;
+
+			// And swap it with the current element.
+			[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+		}
+
+		return array;
+	}
+
+	function levenshtein(a, b) {
+		const matrix = [];
+
+		if (a.length == 0) return b.length;
+		if (b.length == 0) return a.length;
+
+		for (let i = 0; i <= b.length; i++) {
+			matrix[i] = [i];
+		}
+
+		for (let j = 0; j <= a.length; j++) {
+			matrix[0][j] = j;
+		}
+
+		for (let i = 1; i <= b.length; i++) {
+			for (let j = 1; j <= a.length; j++) {
+				if (b.charAt(i - 1) == a.charAt(j - 1)) {
+					matrix[i][j] = matrix[i - 1][j - 1];
+				} else {
+					matrix[i][j] = Math.min(
+						matrix[i - 1][j - 1] + 1,
+						Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)
+					);
+				}
+			}
+		}
+
+		return matrix[b.length][a.length];
+	}
+
+	function updateStreak(increment = false) {
+		if (increment) {
+			streakText = streakText + 1;
+			streakClasses = 'bg-green-500';
+		} else {
+			streakText = 0;
+			streakClasses = 'bg-pink-500';
+		}
+	}
+
+	function checkAnswer(answer = '') {
+		const questionBox = document.getElementById('questionBox');
+		const userAnswer = answerInputValue.trim();
+		const correctAudio = document.getElementById('correctAudio');
+		const incorrectAudio = document.getElementById('incorrectAudio');
+		let isCorrect = false;
+
+		if (!userAnswer) {
+			return;
+		}
+
+		if (learningMode === 'fromJapanese') {
+			isCorrect = currentSentence[currentLanguage].some(
+				(translation) => levenshtein(userAnswer.toLowerCase(), translation.toLowerCase()) <= 2
+			);
+		} else {
+			const romajiAnswer = currentSentence.q.match(/\((.*?)\)/)[1];
+			isCorrect = levenshtein(userAnswer.toLowerCase(), romajiAnswer.toLowerCase()) <= 2;
+		}
+
+		const correctAnswers =
+			learningMode === 'fromJapanese'
+				? currentSentence[currentLanguage].join(', ')
+				: currentSentence.q;
+
+		if (isCorrect) {
+			const correctTranslation = getTranslation('correct', 'Correct!');
+			feedbackText = `✅ ${correctTranslation} ${correctAnswers}`;
+			if (mistakes[currentSentence.q]) {
+				mistakes[currentSentence.q]--;
+			}
+			isFeedbackDisplayed = true;
+			submitAnswerButtonText = getTranslation('nextQuestion', 'Next question');
+			correctAudio.play();
+			questionBoxClasses = 'border-green-500';
+			updateStreak(true);
+		} else {
+			const incorrectTranslation = getTranslation('incorrect', 'Incorrect! Correct answers: ');
+			feedbackText = `❌ ${incorrectTranslation} ${correctAnswers}`;
+			if (!mistakes[currentSentence.q]) {
+				mistakes[currentSentence.q] = 1;
+			} else {
+				mistakes[currentSentence.q]++;
+			}
+			isFeedbackDisplayed = true;
+			submitAnswerButtonText = getTranslation('nextQuestion', 'Next question');
+			incorrectAudio.play();
+			questionBoxClasses = 'border-red-500';
+			updateStreak(false);
+		}
+
+		localStorage.setItem('mistakes', JSON.stringify(mistakes));
+
+		currentTimeout ? clearTimeout(currentTimeout) : null;
+
+		currentTimeout = setTimeout(loadNextSentence, 3500);
+	}
 
 	function handleSearchInput() {
 		const searchTerm = searchInputValue;
@@ -18,7 +206,7 @@
 			return (
 				sentence.q.toLowerCase().includes(searchTerm) ||
 				sentence[currentLanguage].join(' / ').toLowerCase().includes(searchTerm)
-			)
+			);
 		});
 	}
 
@@ -548,7 +736,7 @@
 				nl: ['Ik hou van je.']
 			}
 		]);
-		filteredSentences = [...sentences]
+		filteredSentences = [...sentences];
 
 		function getCurrentLanguage() {
 			return new URLSearchParams(window.location.search).get('lang') || 'en';
@@ -566,10 +754,7 @@
 				'Learn the 100 most important Japanese phrases and words'
 			);
 			document.getElementById('answer').placeholder = getTranslation('answer', 'Type your answer');
-			document.getElementById('submitAnswerButton').textContent = getTranslation(
-				'submitAnswerButton',
-				'Submit'
-			);
+			submitAnswerButtonText = getTranslation('submitAnswerButton', 'Submit');
 			document.getElementById('searchCheatsheet').placeholder = getTranslation('search', 'Search');
 		}
 
@@ -619,199 +804,14 @@
 
 		updateLinksWithCurrentParams();
 
-		function getTranslation(key, defaultValue) {
-			if (currentLanguage === 'en') {
-				return defaultValue ? defaultValue : key;
-			}
-
-			return translations[currentLanguage][key] || defaultValue;
-		}
-
 		function getMode() {
-			return new URLSearchParams(window.location.search).get('mode') === 'toJapanese' ? 'toJapanese' : 'fromJapanese';
+			return new URLSearchParams(window.location.search).get('mode') === 'toJapanese'
+				? 'toJapanese'
+				: 'fromJapanese';
 		}
-
-		let currentSentence = {};
-		let mistakes = {};
-		let isFeedbackDisplayed = false;
-		const submitAnswerButton = document.getElementById('submitAnswerButton');
-		let currentTimeout = null;
 
 		if (localStorage.getItem('mistakes')) {
 			mistakes = JSON.parse(localStorage.getItem('mistakes'));
-		}
-
-		function shuffle(array) {
-			let currentIndex = array.length,
-				randomIndex;
-
-			// While there remain elements to shuffle.
-			while (currentIndex > 0) {
-				// Pick a remaining element.
-				randomIndex = Math.floor(Math.random() * currentIndex);
-				currentIndex--;
-
-				// And swap it with the current element.
-				[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-			}
-
-			return array;
-		}
-
-		function getNextSentence() {
-			let prioritizedSentences = shuffle(sentences)
-				.filter((sentence) => sentence.q !== currentSentence.q)
-				.sort((a, b) => {
-					if (mistakes[a.q] && mistakes[b.q]) {
-						return mistakes[a.q] - mistakes[b.q];
-					}
-
-					if (mistakes[a.q]) {
-						return -1;
-					}
-
-					if (mistakes[b.q]) {
-						return 1;
-					}
-
-					return 0;
-				})
-				.slice(0, 10);
-
-			if (prioritizedSentences.length) {
-				return prioritizedSentences[Math.floor(Math.random() * prioritizedSentences.length)];
-			}
-
-			return sentences[Math.floor(Math.random() * sentences.length)];
-		}
-
-		function levenshtein(a, b) {
-			const matrix = [];
-
-			if (a.length == 0) return b.length;
-			if (b.length == 0) return a.length;
-
-			for (let i = 0; i <= b.length; i++) {
-				matrix[i] = [i];
-			}
-
-			for (let j = 0; j <= a.length; j++) {
-				matrix[0][j] = j;
-			}
-
-			for (let i = 1; i <= b.length; i++) {
-				for (let j = 1; j <= a.length; j++) {
-					if (b.charAt(i - 1) == a.charAt(j - 1)) {
-						matrix[i][j] = matrix[i - 1][j - 1];
-					} else {
-						matrix[i][j] = Math.min(
-							matrix[i - 1][j - 1] + 1,
-							Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)
-						);
-					}
-				}
-			}
-
-			return matrix[b.length][a.length];
-		}
-
-		function updateStreak(increment = false) {
-			const streakEl = document.querySelector('#streak');
-			const streakContainer = streakEl.parentElement;
-			const streak = parseInt(streakEl.textContent);
-
-			if (increment) {
-				streakEl.textContent = streak + 1;
-				streakContainer.classList.remove('bg-pink-500');
-				streakContainer.classList.add('bg-green-500');
-			} else {
-				streakEl.textContent = 0;
-				streakContainer.classList.remove('bg-green-500');
-				streakContainer.classList.add('bg-pink-500');
-			}
-		}
-
-		function checkAnswer() {
-			const questionBox = document.getElementById('questionBox');
-			const userAnswer = document.getElementById('answer').value.trim();
-			const feedback = document.getElementById('feedback');
-			const correctAudio = document.getElementById('correctAudio');
-			const incorrectAudio = document.getElementById('incorrectAudio');
-			let isCorrect = false;
-
-			if (!userAnswer) {
-				return;
-			}
-
-			if (learningMode === 'fromJapanese') {
-				isCorrect = currentSentence[currentLanguage].some(
-					(translation) => levenshtein(userAnswer.toLowerCase(), translation.toLowerCase()) <= 2
-				);
-			} else {
-				const romajiAnswer = currentSentence.q.match(/\((.*?)\)/)[1];
-				isCorrect = levenshtein(userAnswer.toLowerCase(), romajiAnswer.toLowerCase()) <= 2;
-			}
-
-			const correctAnswers =
-				learningMode === 'fromJapanese'
-					? currentSentence[currentLanguage].join(', ')
-					: currentSentence.q;
-
-			if (isCorrect) {
-				const correctTranslation = getTranslation('correct', 'Correct!');
-				feedback.textContent = `✅ ${correctTranslation} ${correctAnswers}`;
-				if (mistakes[currentSentence.q]) {
-					mistakes[currentSentence.q]--;
-				}
-				isFeedbackDisplayed = true;
-				submitAnswerButton.textContent = getTranslation('nextQuestion', 'Next question');
-				correctAudio.play();
-				questionBox.classList.add('border-green-500');
-				updateStreak(true);
-			} else {
-				const incorrectTranslation = getTranslation('incorrect', 'Incorrect! Correct answers: ');
-				feedback.textContent = `❌ ${incorrectTranslation} ${correctAnswers}`;
-				if (!mistakes[currentSentence.q]) {
-					mistakes[currentSentence.q] = 1;
-				} else {
-					mistakes[currentSentence.q]++;
-				}
-				isFeedbackDisplayed = true;
-				submitAnswerButton.textContent = getTranslation('nextQuestion', 'Next question');
-				incorrectAudio.play();
-				questionBox.classList.add('border-red-500');
-				updateStreak(false);
-			}
-
-			localStorage.setItem('mistakes', JSON.stringify(mistakes));
-
-			currentTimeout ? clearTimeout(currentTimeout) : null;
-
-			currentTimeout = setTimeout(loadNextSentence, 3500);
-		}
-
-		// document.getElementById('answerForm').addEventListener('submit', (e) => {
-		// 	e.preventDefault();
-
-		// 	if (isFeedbackDisplayed) {
-		// 		loadNextSentence();
-		// 	} else {
-		// 		checkAnswer();
-		// 	}
-		// });
-
-		function loadNextSentence() {
-			currentTimeout ? clearTimeout(currentTimeout) : null;
-			currentSentence = getNextSentence();
-			document.getElementById('question').textContent =
-				learningMode === 'fromJapanese'
-					? currentSentence.q
-					: currentSentence[currentLanguage].join(' / ');
-			document.getElementById('answer').value = '';
-			document.getElementById('feedback').textContent = '';
-			isFeedbackDisplayed = false;
-			submitAnswerButton.textContent = getTranslation('submitAnswerButton', 'Submit');
-			questionBox.classList.remove('border-green-500', 'border-red-500');
 		}
 
 		loadNextSentence();
@@ -847,24 +847,28 @@
 	</div>
 
 	<div
-		class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border border-purple-600 bg-slate-900 transition-colors relative"
+		class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border bg-slate-900 transition-colors relative {questionBoxClasses}"
 		id="questionBox"
 	>
 		<!-- display streak of correct answers in top right corner, rounded, with a pink background
             position it over the corner of the box
          -->
 		<div
-			class="flex items-center justify-center absolute -top-3 -right-3 md:-top-6 md:-right-6 w-12 h-12 rounded-full bg-pink-600 text-white px-4 py-2 text-sm font-medium tracking-wider"
+			class="flex items-center justify-center absolute -top-3 -right-3 md:-top-6 md:-right-6 w-12 h-12 rounded-full text-white px-4 py-2 text-sm font-medium tracking-wider {streakClasses}"
 		>
-			<span id="streak">0</span>
+			<span id="streak">
+				{streakText || 0}
+			</span>
 		</div>
 		<h1 id="title" class="text-4xl font-bold mb-2 text-pink-400">百 - Hyaku</h1>
 		<h2 id="subTitle" class="text-md font-semibold mb-6 text-purple-500 tracking-wider">
 			Learn the 100 most important Japanese sentences and words
 		</h2>
 
-		<form id="answerForm" class="space-y-4">
-			<div id="question" class="text-xl text-white font-medium" />
+		<form id="answerForm" class="space-y-4" on:submit={handleAnswerSubmit}>
+			<div id="question" class="text-xl text-white font-medium">
+				{questionText}
+			</div>
 
 			<div>
 				<input
@@ -873,6 +877,7 @@
 					placeholder="Type your answer"
 					required
 					class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
+					bind:value={answerInputValue}
 				/>
 			</div>
 
@@ -882,11 +887,13 @@
 					id="submitAnswerButton"
 					class="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out"
 				>
-					Submit
+					{submitAnswerButtonText || 'Submit'}
 				</button>
 			</div>
 
-			<div id="feedback" class="text-lg text-pink-400 font-medium" />
+			<div id="feedback" class="text-lg text-pink-400 font-medium">
+				{feedbackText}
+			</div>
 		</form>
 	</div>
 
@@ -904,14 +911,13 @@
 
 		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4" id="cheatsheet">
 			{#each filteredSentences as sentence}
-			<li class="bg-slate-800 p-4 rounded-md shadow-md text-white text-lg font-medium flex items-center justify-between">
-
-				<div class="text-xl">{sentence.q}</div>
-                <div class="text-pink-400">{sentence[currentLanguage].join(' / ')}</div>
-
-			</li>
+				<li
+					class="bg-slate-800 p-4 rounded-md shadow-md text-white text-lg font-medium flex items-center justify-between"
+				>
+					<div class="text-xl">{sentence.q}</div>
+					<div class="text-pink-400">{sentence[currentLanguage].join(' / ')}</div>
+				</li>
 			{/each}
-
 		</ul>
 	</div>
 </div>
