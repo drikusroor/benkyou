@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	import dataJson from './data.json';
 
@@ -12,9 +13,17 @@
 		| 'incorrect'
 		| 'correctAnswers'
 		| 'nextQuestion'
-		| 'search';
+		| 'search'
+		| 'fromLinkText'
+		| 'toLinkText';
+
+	interface Language {
+		code: string;
+		label: string;
+	}
 
 	interface FlashCardsConfigurationData {
+		languages: Language[];
 		translations: {
 			[language: string]: { [key in TranslationKeys]: string };
 		};
@@ -31,8 +40,11 @@
 
 	type Mistakes = { [question: string]: number };
 
+	let languages = data.languages;
+
 	let sentences: FlashCardsConfigurationData['questions'];
-	let translations: FlashCardsConfigurationData['translations'];
+	let translations: FlashCardsConfigurationData['translations'] = data.translations;
+	let t: (key: TranslationKeys, defaultValue?: string) => string;
 	let currentLanguage: 'en' | 'nl';
 	let learningMode: 'from' | 'to';
 
@@ -105,11 +117,7 @@
 	}
 
 	function getTranslation(key: TranslationKeys, defaultValue?: string) {
-		if (currentLanguage === 'en') {
-			return defaultValue ? defaultValue : key;
-		}
-
-		const translation =  translations[currentLanguage][key];
+		const translation = translations[currentLanguage][key] || translations['general'][key];
 
 		if (translation) {
 			return translation;
@@ -119,8 +127,16 @@
 			return defaultValue;
 		}
 
-		return `{{${key}}}`
+		return `{{${key}}}`;
 	}
+
+	$: t = (key: TranslationKeys, defaultValue?: string) => {
+		if (translations && translations[currentLanguage]) {
+			return getTranslation(key, defaultValue);
+		}
+
+		return defaultValue || `{{${key}}}`;
+	};
 
 	function shuffle<T>(array: T[] = []): T[] {
 		let currentIndex = array.length,
@@ -246,12 +262,29 @@
 		});
 	}
 
+	function changeLanguage(event: Event) {
+		event.preventDefault();
+		const target = event.currentTarget as HTMLLinkElement;
+		const url = new URL(target.href);
+		goto(url.href, { replaceState: true });
+		const newLanguage = url.searchParams.get('lang') as 'en' | 'nl';
+		currentLanguage = newLanguage;
+		loadNextSentence();
+	}
+
+	function changeMode(event: Event) {
+		event.preventDefault();
+		const target = event.currentTarget as HTMLLinkElement;
+		const url = new URL(target.href);
+		goto(url.href, { replaceState: true });
+		const newMode = url.searchParams.get('mode') as 'from' | 'to';
+		learningMode = newMode;
+		loadNextSentence();
+	}
+
 	onMount(() => {
 		currentLanguage = getCurrentLanguage();
 		learningMode = getMode();
-
-		translations = data.translations;
-
 		sentences = shuffle(data.questions);
 		filteredSentences = [...sentences];
 
@@ -264,68 +297,6 @@
 
 			return lang;
 		}
-
-		function translate() {
-			if (currentLanguage === 'en') {
-				return;
-			}
-
-			document.title = getTranslation('title', '百 - Hyaku');
-			document.getElementById('title').textContent = getTranslation('title', '百 - Hyaku');
-			document.getElementById('subTitle').textContent = getTranslation(
-				'mostImportantWords',
-				'Learn the 100 most important Japanese phrases and words'
-			);
-			document.getElementById('answer').placeholder = getTranslation('answer', 'Type your answer');
-			submitAnswerButtonText = getTranslation('submitAnswerButton', 'Submit');
-			document.getElementById('searchCheatsheet').placeholder = getTranslation('search', 'Search');
-		}
-
-		translate();
-
-		function setLanguageSwitchState() {
-			const dutchLink = document.getElementById('dutchLink');
-			const englishLink = document.getElementById('englishLink');
-
-			if (currentLanguage === 'en') {
-				dutchLink.classList.remove('underline');
-				englishLink.classList.add('underline');
-			} else {
-				dutchLink.classList.add('underline');
-				englishLink.classList.remove('underline');
-			}
-		}
-
-		setLanguageSwitchState();
-
-		function setLearningModeSwitchState() {
-			const fromLink = document.getElementById('fromJapaneseLink');
-			const toLink = document.getElementById('toJapaneseLink');
-
-			if (learningMode === 'from') {
-				fromLink.classList.add('underline');
-				toLink.classList.remove('underline');
-			} else {
-				fromLink.classList.remove('underline');
-				toLink.classList.add('underline');
-			}
-		}
-
-		setLearningModeSwitchState();
-
-		function updateLinksWithCurrentParams() {
-			const dutchLink = document.getElementById('dutchLink');
-			const englishLink = document.getElementById('englishLink');
-			const fromLink = document.getElementById('fromJapaneseLink');
-			const toLink = document.getElementById('toJapaneseLink');
-
-			dutchLink.href = `?lang=nl&mode=${learningMode}`;
-			englishLink.href = `?lang=en&mode=${learningMode}`;
-			fromLink.href = `?lang=${currentLanguage}&mode=from`;
-			toLink.href = `?lang=${currentLanguage}&mode=to`;
-		}
-
-		updateLinksWithCurrentParams();
 
 		function getMode() {
 			return new URLSearchParams(window.location.search).get('mode') === 'to' ? 'to' : 'from';
@@ -350,20 +321,41 @@
 
 <div class="min-h-screen bg-black flex flex-col items-center justify-center p-5">
 	<div class="flex flex-row gap-4">
-		<div class="rounded-xl bg-slate-900 p-4 mb-4">
-			<a id="englishLink" href="?lang=en" class="text-white hover:text-pink-400">English</a>
-			<span class="text-white">|</span>
-			<a id="dutchLink" href="?lang=nl" class="text-white hover:text-pink-400">Nederlands</a>
+		<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
+			{#each languages as language, index}
+				<a
+					href="?lang={language.code}&mode={learningMode}"
+					class="text-white hover:text-pink-400 {language.code === currentLanguage
+						? 'underline'
+						: ''}"
+					on:click={changeLanguage}
+				>
+					{language.label}
+				</a>
+				{#if index < languages.length - 1}
+					<span class="text-white">|</span>
+				{/if}
+			{/each}
 		</div>
 
 		<div class="rounded-xl bg-slate-900 p-4 mb-4">
-			<a id="fromJapaneseLink" href="?mode=fromJapanese" class="text-white hover:text-pink-400"
-				>は > ha</a
+			<a
+				id="fromLink"
+				href="?lang={currentLanguage}&mode=from"
+				class="text-white hover:text-pink-400 {learningMode === 'from' ? 'underline' : ''}"
+				on:click={changeMode}
 			>
+				{t('fromLinkText', 'From')}
+			</a>
 			<span class="text-white">|</span>
-			<a id="toJapaneseLink" href="?mode=toJapanese" class="text-white hover:text-pink-400"
-				>ha > は</a
+			<a
+				id="toLink"
+				href="?lang={currentLanguage}&mode=to"
+				class="text-white hover:text-pink-400 {learningMode === 'to' ? 'underline' : ''}"
+				on:click={changeMode}
 			>
+				{t('toLinkText', 'To')}
+			</a>
 		</div>
 	</div>
 
@@ -383,7 +375,7 @@
 		</div>
 		<h1 id="title" class="text-4xl font-bold mb-2 text-pink-400">百 - Hyaku</h1>
 		<h2 id="subTitle" class="text-md font-semibold mb-6 text-purple-500 tracking-wider">
-			Learn the 100 most important Japanese sentences and words
+			{t('mostImportantWords')}
 		</h2>
 
 		<form id="answerForm" class="space-y-4" on:submit={handleAnswerSubmit}>
@@ -395,7 +387,7 @@
 				<input
 					type="text"
 					id="answer"
-					placeholder="Type your answer"
+					placeholder="{t('answer')}"
 					required
 					class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
 					bind:value={answerInputValue}
@@ -408,7 +400,7 @@
 					id="submitAnswerButton"
 					class="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out"
 				>
-					{submitAnswerButtonText || 'Submit'}
+					{t('submitAnswerButton')}
 				</button>
 			</div>
 
@@ -423,7 +415,7 @@
 			<input
 				type="text"
 				id="searchCheatsheet"
-				placeholder="Search"
+				placeholder="{t('search')}"
 				class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
 				bind:value={searchInputValue}
 				on:input={handleSearchInput}

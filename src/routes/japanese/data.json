@@ -1,5 +1,19 @@
 {
+    "languages": [
+        {
+            "code": "nl",
+            "label": "Nederlands"
+        },
+        {
+            "code": "en",
+            "label": "English"
+        }
+    ],
     "translations": {
+        "general": {
+            "fromLinkText": "は > ha",
+            "toLinkText": "ha > は"
+        },
         "nl": {
             "title": "百 - Hyaku",
             "mostImportantWords": "Leer de 100 belangrijkste Japanse zinnen en woorden",
@@ -9,7 +23,9 @@
             "incorrect": "Incorrect! Correcte antwoord(en): ",
             "correctAnswers": "Correcte antwoorden: ",
             "nextQuestion": "Volgende vraag",
-            "search": "Zoeken"
+            "search": "Zoeken",
+            "fromLinkText": "は > ha",
+            "toLinkText": "ha > は"
         },
         "en": {
             "title": "百 - Hyaku",
@@ -20,7 +36,9 @@
             "incorrect": "Incorrect! Correct answer(s): ",
             "correctAnswers": "Correct answers: ",
             "nextQuestion": "Next question",
-            "search": "Search"
+            "search": "Search",
+            "fromLinkText": "は > ha",
+            "toLinkText": "ha > は"
         }
     },
     "questions": [
