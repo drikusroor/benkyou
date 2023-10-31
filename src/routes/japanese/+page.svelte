@@ -322,137 +322,191 @@
 	});
 </script>
 
-<div class="min-h-screen bg-black flex flex-col items-center justify-center p-5">
+<div class="min-h-screen bg-black flex flex-col items-center p-5">
 	<div class="flex flex-row gap-4">
 		{#if !loading}
-		<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
-			{#each languages as language, index}
-				<a
-					href="?lang={language.code}&mode={learningMode}"
-					class="text-white hover:text-pink-400 {language.code === currentLanguage
-						? 'underline'
-						: ''}"
-					on:click={changeLanguage}
-				>
-					{language.label}
-				</a>
-				{#if index < languages.length - 1}
-					<span class="text-white">|</span>
-				{/if}
-			{/each}
-		</div>
+			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
+				{#each languages as language, index}
+					<a
+						href="?lang={language.code}&mode={learningMode}"
+						class="text-white hover:text-pink-400 {language.code === currentLanguage
+							? 'underline'
+							: ''}"
+						on:click={changeLanguage}
+					>
+						{language.label}
+					</a>
+					{#if index < languages.length - 1}
+						<span class="text-white">|</span>
+					{/if}
+				{/each}
+			</div>
 
-		<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
-			<a
-				id="fromLink"
-				href="?lang={currentLanguage}&mode=from"
-				class="text-white hover:text-pink-400 {learningMode === 'from' ? 'underline' : ''}"
-				on:click={changeMode}
-			>
-				{t('fromLinkText', 'From')}
-			</a>
-			<span class="text-white">|</span>
-			<a
-				id="toLink"
-				href="?lang={currentLanguage}&mode=to"
-				class="text-white hover:text-pink-400 {learningMode === 'to' ? 'underline' : ''}"
-				on:click={changeMode}
-			>
-				{t('toLinkText', 'To')}
-			</a>
-		</div>
+			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
+				<a
+					id="fromLink"
+					href="?lang={currentLanguage}&mode=from"
+					class="text-white hover:text-pink-400 {learningMode === 'from' ? 'underline' : ''}"
+					on:click={changeMode}
+				>
+					{t('fromLinkText', 'From')}
+				</a>
+				<span class="text-white">|</span>
+				<a
+					id="toLink"
+					href="?lang={currentLanguage}&mode=to"
+					class="text-white hover:text-pink-400 {learningMode === 'to' ? 'underline' : ''}"
+					on:click={changeMode}
+				>
+					{t('toLinkText', 'To')}
+				</a>
+			</div>
 		{/if}
 
 		{#if loading}
-		<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
-			<span class="text-white w-12 text-center">...</span>
-			<span class="text-white">|</span>
-			<span class="text-white w-12 text-center">...</span>
-		</div>
+			<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
+				<span class="text-white w-12 text-center">...</span>
+				<span class="text-white">|</span>
+				<span class="text-white w-12 text-center">...</span>
+			</div>
 
-		<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
-			<span class="text-white w-12 text-center">...</span>
-			<span class="text-white">|</span>
-			<span class="text-white w-12 text-center">...</span>
-		</div>
-
+			<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
+				<span class="text-white w-12 text-center">...</span>
+				<span class="text-white">|</span>
+				<span class="text-white w-12 text-center">...</span>
+			</div>
 		{/if}
 	</div>
 
-	<div
-		class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border bg-slate-900 transition-colors relative {questionBoxClasses}"
-		id="questionBox"
-	>
-		<!-- display streak of correct answers in top right corner, rounded, with a pink background
-            position it over the corner of the box
-         -->
+	{#if !loading}
 		<div
-			class="flex items-center justify-center absolute -top-3 -right-3 md:-top-6 md:-right-6 w-12 h-12 rounded-full text-white px-4 py-2 text-sm font-medium tracking-wider {streakClasses}"
+			class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border bg-slate-900 transition-colors relative {questionBoxClasses}"
+			id="questionBox"
 		>
-			<span id="streak">
-				{streakText || 0}
-			</span>
-		</div>
-		<h1 id="title" class="text-4xl font-bold mb-2 text-pink-400">百 - Hyaku</h1>
-		<h2 id="subTitle" class="text-md font-semibold mb-6 text-purple-500 tracking-wider">
-			{t('mostImportantWords')}
-		</h2>
-
-		<form id="answerForm" class="space-y-4" on:submit={handleAnswerSubmit}>
-			<div id="question" class="text-xl text-white font-medium">
-				{questionText}
+			<div
+				class="flex items-center justify-center absolute -top-3 -right-3 md:-top-6 md:-right-6 w-12 h-12 rounded-full text-white px-4 py-2 text-sm font-medium tracking-wider {streakClasses}"
+			>
+				<span id="streak">
+					{streakText || 0}
+				</span>
 			</div>
+			<h1 id="title" class="text-4xl font-bold mb-2 text-pink-400">百 - Hyaku</h1>
+			<h2 id="subTitle" class="text-md font-semibold mb-6 text-purple-500 tracking-wider">
+				{t('mostImportantWords')}
+			</h2>
 
-			<div>
+			<form id="answerForm" class="space-y-4" on:submit={handleAnswerSubmit}>
+				<div id="question" class="text-xl text-white font-medium">
+					{questionText}
+				</div>
+
+				<div>
+					<input
+						type="text"
+						id="answer"
+						placeholder={t('answer')}
+						required
+						class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
+						bind:value={answerInputValue}
+					/>
+				</div>
+
+				<div>
+					<button
+						type="submit"
+						id="submitAnswerButton"
+						class="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out"
+					>
+						{t('submitAnswerButton')}
+					</button>
+				</div>
+
+				<div id="feedback" class="text-lg text-pink-400 font-medium">
+					{feedbackText}
+				</div>
+			</form>
+		</div>
+	{/if}
+
+	{#if loading}
+		<div
+			class="bg-opacity-60 shadow-lg rounded-xl p-8 w-full max-w-xl border bg-purple-900 animate-pulse transition-colors relative"
+		>
+			<div
+				class="flex items-center justify-center absolute -top-3 -right-3 md:-top-6 md:-right-6 w-12 h-12 rounded-full text-white px-4 py-2 text-sm font-medium tracking-wider bg-pink-500"
+			>
+			</div>
+			<h1 class="text-4xl font-bold mb-2 text-pink-400">...</h1>
+			<h2 class="text-md font-semibold mb-6 text-purple-500 tracking-wider">...</h2>
+
+			<div class="space-y-4">
+				<div class="text-xl text-white font-medium">...</div>
+
+				<div>
+					<input
+						type="text"
+						id="answer"
+						placeholder="..."
+						required
+						class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
+					/>
+				</div>
+
+				<div>
+					<div class="bg-purple-600 text-white px-6 py-3 rounded-md">...</div>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	{#if !loading}
+		<div class="mt-8 bg-slate-900">
+			<form class="flex items-center justify-center space-x-4 p-4">
 				<input
 					type="text"
-					id="answer"
-					placeholder={t('answer')}
-					required
+					id="searchCheatsheet"
+					placeholder={t('search')}
 					class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
-					bind:value={answerInputValue}
+					bind:value={searchInputValue}
+					on:input={handleSearchInput}
 				/>
-			</div>
+			</form>
 
-			<div>
-				<button
-					type="submit"
-					id="submitAnswerButton"
-					class="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out"
+			<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4" id="cheatsheet">
+				{#each filteredSentences as sentence}
+					<li
+						class="bg-slate-800 p-4 rounded-md shadow-md text-white text-lg font-medium flex items-center justify-between"
+					>
+						<div class="text-xl">{sentence.q}</div>
+						<div class="text-pink-400">{sentence[currentLanguage].join(' / ')}</div>
+					</li>
+				{/each}
+			</ul>
+		</div>
+	{/if}
+
+	{#if loading}
+		<div class="mt-8 bg-purple-900 animate-pulse w-full">
+			<div class="flex items-center justify-center space-x-4 p-4">
+				<div
+					class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
 				>
-					{t('submitAnswerButton')}
-				</button>
+					...
+				</div>
 			</div>
 
-			<div id="feedback" class="text-lg text-pink-400 font-medium">
-				{feedbackText}
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+				{#each Array(12).fill(true) as number}
+					<div
+						class="bg-slate-800 p-4 rounded-md shadow-md text-white text-lg font-medium flex items-center justify-between"
+					>
+						<div class="text-xl">...</div>
+						<div class="text-pink-400">...</div>
+					</div>
+				{/each}
 			</div>
-		</form>
-	</div>
-
-	<div class="mt-8 bg-slate-900">
-		<form class="flex items-center justify-center space-x-4 p-4">
-			<input
-				type="text"
-				id="searchCheatsheet"
-				placeholder={t('search')}
-				class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
-				bind:value={searchInputValue}
-				on:input={handleSearchInput}
-			/>
-		</form>
-
-		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4" id="cheatsheet">
-			{#each filteredSentences as sentence}
-				<li
-					class="bg-slate-800 p-4 rounded-md shadow-md text-white text-lg font-medium flex items-center justify-between"
-				>
-					<div class="text-xl">{sentence.q}</div>
-					<div class="text-pink-400">{sentence[currentLanguage].join(' / ')}</div>
-				</li>
-			{/each}
-		</ul>
-	</div>
+		</div>
+	{/if}
 </div>
 
 <audio id="correctAudio" src="correct.m4a" />
