@@ -6,7 +6,8 @@
         },
         {
             "code": "en",
-            "label": "English"
+            "label": "English",
+            "default": true
         }
     ],
     "translations": {

@@ -20,6 +20,7 @@
 	interface Language {
 		code: string;
 		label: string;
+		default?: boolean;
 	}
 
 	interface FlashCardsConfigurationData {
@@ -32,20 +33,22 @@
 
 	const data: FlashCardsConfigurationData = dataJson;
 
+	type LanguageCode = (typeof languages)[number]['code'];
+
 	interface Sentence {
 		q: string;
-		en: string[];
-		nl: string[];
+		[key: LanguageCode]: string[];
 	}
 
 	type Mistakes = { [question: string]: number };
 
 	let languages = data.languages;
+	const defaultLanguage = languages.find((language) => language.default);
 
 	let sentences: FlashCardsConfigurationData['questions'];
 	let translations: FlashCardsConfigurationData['translations'] = data.translations;
 	let t: (key: TranslationKeys, defaultValue?: string) => string;
-	let currentLanguage: 'en' | 'nl';
+	let currentLanguage: LanguageCode;
 	let learningMode: 'from' | 'to';
 
 	// QA flow related
@@ -197,8 +200,8 @@
 
 	function checkAnswer() {
 		const userAnswer = answerInputValue.trim();
-		const correctAudio = document.getElementById('correctAudio');
-		const incorrectAudio = document.getElementById('incorrectAudio');
+		const correctAudio = document.getElementById('correctAudio') as HTMLAudioElement;
+		const incorrectAudio = document.getElementById('incorrectAudio') as HTMLAudioElement;
 		let isCorrect = false;
 
 		if (!userAnswer) {
@@ -267,7 +270,7 @@
 		const target = event.currentTarget as HTMLLinkElement;
 		const url = new URL(target.href);
 		goto(url.href, { replaceState: true });
-		const newLanguage = url.searchParams.get('lang') as 'en' | 'nl';
+		const newLanguage = url.searchParams.get('lang') as LanguageCode;
 		currentLanguage = newLanguage;
 		loadNextSentence();
 	}
@@ -291,11 +294,17 @@
 		function getCurrentLanguage() {
 			const lang = new URLSearchParams(window.location.search).get('lang');
 
-			if (lang !== 'en' && lang !== 'nl') {
-				return 'en';
+			const exists = languages.some((language) => language.code === lang);
+
+			if (exists) {
+				return lang as LanguageCode;
 			}
 
-			return lang;
+			if (defaultLanguage) {
+				return defaultLanguage.code;
+			}
+
+			return languages[0].code;
 		}
 
 		function getMode() {
@@ -307,15 +316,6 @@
 		}
 
 		loadNextSentence();
-
-		const getReadableSentencesForMarkdownTable = () =>
-			sentences.map((s) => {
-				return {
-					'Japanese (Romaji)': s.q,
-					English: s.en.join(', '),
-					Dutch: s.nl.join(', ')
-				};
-			});
 	});
 </script>
 
@@ -387,7 +387,7 @@
 				<input
 					type="text"
 					id="answer"
-					placeholder="{t('answer')}"
+					placeholder={t('answer')}
 					required
 					class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
 					bind:value={answerInputValue}
@@ -415,7 +415,7 @@
 			<input
 				type="text"
 				id="searchCheatsheet"
-				placeholder="{t('search')}"
+				placeholder={t('search')}
 				class="w-full p-3 border border-purple-400 bg-opacity-50 bg-slate-800 text-white rounded-md focus:outline-none focus:border-pink-400 focus:ring focus:ring-purple-300 transition duration-150 ease-in-out"
 				bind:value={searchInputValue}
 				on:input={handleSearchInput}
