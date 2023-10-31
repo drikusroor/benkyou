@@ -42,6 +42,7 @@
 
 	type Mistakes = { [question: string]: number };
 
+	let loading = true;
 	let languages = data.languages;
 	const defaultLanguage = languages.find((language) => language.default);
 
@@ -316,11 +317,14 @@
 		}
 
 		loadNextSentence();
+
+		loading = false;
 	});
 </script>
 
 <div class="min-h-screen bg-black flex flex-col items-center justify-center p-5">
 	<div class="flex flex-row gap-4">
+		{#if !loading}
 		<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 			{#each languages as language, index}
 				<a
@@ -338,7 +342,7 @@
 			{/each}
 		</div>
 
-		<div class="rounded-xl bg-slate-900 p-4 mb-4">
+		<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 			<a
 				id="fromLink"
 				href="?lang={currentLanguage}&mode=from"
@@ -357,6 +361,22 @@
 				{t('toLinkText', 'To')}
 			</a>
 		</div>
+		{/if}
+
+		{#if loading}
+		<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
+			<span class="text-white w-12 text-center">...</span>
+			<span class="text-white">|</span>
+			<span class="text-white w-12 text-center">...</span>
+		</div>
+
+		<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
+			<span class="text-white w-12 text-center">...</span>
+			<span class="text-white">|</span>
+			<span class="text-white w-12 text-center">...</span>
+		</div>
+
+		{/if}
 	</div>
 
 	<div
