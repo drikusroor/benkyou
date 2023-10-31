@@ -1,0 +1,1046 @@
+{
+    "languages": [
+        {
+            "code": "nl",
+            "label": "Nederlands"
+        },
+        {
+            "code": "en",
+            "label": "English",
+            "default": true
+        }
+    ],
+    "translations": {
+        "general": {
+            "fromLinkText": "from Esperanto",
+            "toLinkText": "to Esperanto"
+        },
+        "nl": {
+            "title": "Cento - Cent",
+            "mostImportantWords": "Leer de 100 belangrijkste Esperanto zinnen en woorden",
+            "answer": "Typ je antwoord",
+            "submitAnswerButton": "Verstuur",
+            "correct": "Correct!",
+            "incorrect": "Incorrect! Correcte antwoord(en): ",
+            "correctAnswers": "Correcte antwoorden: ",
+            "nextQuestion": "Volgende vraag",
+            "search": "Zoeken",
+            "fromLinkText": "van Esperanto",
+            "toLinkText": "naar Esperanto"
+        },
+        "en": {
+            "title": "Cento - Cent",
+            "mostImportantWords": "Learn the 100 most important Esperanto phrases and words",
+            "answer": "Type your answer",
+            "submitAnswerButton": "Submit",
+            "correct": "Correct!",
+            "incorrect": "Incorrect! Correct answer(s): ",
+            "correctAnswers": "Correct answers: ",
+            "nextQuestion": "Next question",
+            "search": "Search",
+            "fromLinkText": "from Esperanto",
+            "toLinkText": "to Esperanto"
+        }
+    },
+    "questions": [
+        {
+            "q": "Saluton",
+            "en": [
+                "Hello."
+            ],
+            "nl": [
+                "Hallo."
+            ]
+        },
+        {
+            "q": "Bonan matenon",
+            "en": [
+                "Good morning."
+            ],
+            "nl": [
+                "Goedemorgen."
+            ]
+        },
+        {
+            "q": "Bonan tagon",
+            "en": [
+                "Good afternoon."
+            ],
+            "nl": [
+                "Goedemiddag."
+            ]
+        },
+        {
+            "q": "Bonan vesperon",
+            "en": [
+                "Good evening."
+            ],
+            "nl": [
+                "Goedenavond."
+            ]
+        },
+        {
+            "q": "Ĝis revido",
+            "en": [
+                "Goodbye."
+            ],
+            "nl": [
+                "Tot ziens."
+            ]
+        },
+        {
+            "q": "Dankon",
+            "en": [
+                "Thank you."
+            ],
+            "nl": [
+                "Dank je."
+            ]
+        },
+        {
+            "q": "Mi pardonpetas",
+            "en": [
+                "I am sorry."
+            ],
+            "nl": [
+                "Het spijt me."
+            ]
+        },
+        {
+            "q": "Jes",
+            "en": [
+                "Yes."
+            ],
+            "nl": [
+                "Ja."
+            ]
+        },
+        {
+            "q": "Ne",
+            "en": [
+                "No."
+            ],
+            "nl": [
+                "Nee."
+            ]
+        },
+        {
+            "q": "Kiu vi estas?",
+            "en": [
+                "Who are you?"
+            ],
+            "nl": [
+                "Wie ben jij?"
+            ]
+        },
+        {
+            "q": "Kiel vi fartas?",
+            "en": [
+                "How are you?"
+            ],
+            "nl": [
+                "Hoe gaat het?"
+            ]
+        },
+        {
+            "q": "Mia nomo estas...",
+            "en": [
+                "My name is..."
+            ],
+            "nl": [
+                "Mijn naam is..."
+            ]
+        },
+        {
+            "q": "Mi estas...",
+            "en": [
+                "I am..."
+            ],
+            "nl": [
+                "Ik ben..."
+            ]
+        },
+        {
+            "q": "Kie vi loĝas?",
+            "en": [
+                "Where do you live?"
+            ],
+            "nl": [
+                "Waar woon je?"
+            ]
+        },
+        {
+            "q": "Kiom da jaroj vi havas?",
+            "en": [
+                "How old are you?"
+            ],
+            "nl": [
+                "Hoe oud ben je?"
+            ]
+        },
+        {
+            "q": "Kion vi faras?",
+            "en": [
+                "What do you do?"
+            ],
+            "nl": [
+                "Wat doe je?"
+            ]
+        },
+        {
+            "q": "Kie estas la necesejo?",
+            "en": [
+                "Where is the restroom?"
+            ],
+            "nl": [
+                "Waar is het toilet?"
+            ]
+        },
+        {
+            "q": "Mi bezonas helpon",
+            "en": [
+                "I need help."
+            ],
+            "nl": [
+                "Ik heb hulp nodig."
+            ]
+        },
+        {
+            "q": "Mi amas vin",
+            "en": [
+                "I love you."
+            ],
+            "nl": [
+                "Ik hou van je."
+            ]
+        },
+        {
+            "q": "Unu, du, tri",
+            "en": [
+                "One, two, three."
+            ],
+            "nl": [
+                "Een, twee, drie."
+            ]
+        },
+        {
+            "q": "Biero",
+            "en": [
+                "Beer."
+            ],
+            "nl": [
+                "Bier."
+            ]
+        },
+        {
+            "q": "Vino",
+            "en": [
+                "Wine."
+            ],
+            "nl": [
+                "Wijn."
+            ]
+        },
+        {
+            "q": "Akvo",
+            "en": [
+                "Water."
+            ],
+            "nl": [
+                "Water."
+            ]
+        },
+        {
+            "q": "Manĝo",
+            "en": [
+                "Food."
+            ],
+            "nl": [
+                "Eten."
+            ]
+        },
+        {
+            "q": "Amiko",
+            "en": [
+                "Friend."
+            ],
+            "nl": [
+                "Vriend."
+            ]
+        },
+        {
+            "q": "Familio",
+            "en": [
+                "Family."
+            ],
+            "nl": [
+                "Familie."
+            ]
+        },
+        {
+            "q": "Hejmo",
+            "en": [
+                "Home."
+            ],
+            "nl": [
+                "Thuis."
+            ]
+        },
+        {
+            "q": "Arbo",
+            "en": [
+                "Tree."
+            ],
+            "nl": [
+                "Boom."
+            ]
+        },
+        {
+            "q": "Floro",
+            "en": [
+                "Flower."
+            ],
+            "nl": [
+                "Bloem."
+            ]
+        },
+        {
+            "q": "Hundo",
+            "en": [
+                "Dog."
+            ],
+            "nl": [
+                "Hond."
+            ]
+        },
+        {
+            "q": "Kato",
+            "en": [
+                "Cat."
+            ],
+            "nl": [
+                "Kat."
+            ]
+        },
+        {
+            "q": "Auto",
+            "en": [
+                "Car."
+            ],
+            "nl": [
+                "Auto."
+            ]
+        },
+        {
+            "q": "Libro",
+            "en": [
+                "Book."
+            ],
+            "nl": [
+                "Boek."
+            ]
+        },
+        {
+            "q": "Muziko",
+            "en": [
+                "Music."
+            ],
+            "nl": [
+                "Muziek."
+            ]
+        },
+        {
+            "q": "Kanto",
+            "en": [
+                "Song."
+            ],
+            "nl": [
+                "Lied."
+            ]
+        },
+        {
+            "q": "Danco",
+            "en": [
+                "Dance."
+            ],
+            "nl": [
+                "Dans."
+            ]
+        },
+        {
+            "q": "Festo",
+            "en": [
+                "Party."
+            ],
+            "nl": [
+                "Feest."
+            ]
+        },
+        {
+            "q": "Tago",
+            "en": [
+                "Day."
+            ],
+            "nl": [
+                "Dag."
+            ]
+        },
+        {
+            "q": "Nokto",
+            "en": [
+                "Night."
+            ],
+            "nl": [
+                "Nacht."
+            ]
+        },
+        {
+            "q": "Suno",
+            "en": [
+                "Sun."
+            ],
+            "nl": [
+                "Zon."
+            ]
+        },
+        {
+            "q": "Luno",
+            "en": [
+                "Moon."
+            ],
+            "nl": [
+                "Maan."
+            ]
+        },
+        {
+            "q": "Stelo",
+            "en": [
+                "Star."
+            ],
+            "nl": [
+                "Ster."
+            ]
+        },
+        {
+            "q": "Ĉielo",
+            "en": [
+                "Sky."
+            ],
+            "nl": [
+                "Lucht."
+            ]
+        },
+        {
+            "q": "Maro",
+            "en": [
+                "Sea."
+            ],
+            "nl": [
+                "Zee."
+            ]
+        },
+        {
+            "q": "Rivero",
+            "en": [
+                "River."
+            ],
+            "nl": [
+                "Rivier."
+            ]
+        },
+        {
+            "q": "Monto",
+            "en": [
+                "Mountain."
+            ],
+            "nl": [
+                "Berg."
+            ]
+        },
+        {
+            "q": "Valo",
+            "en": [
+                "Valley."
+            ],
+            "nl": [
+                "Vallei."
+            ]
+        },
+        {
+            "q": "Urbo",
+            "en": [
+                "City."
+            ],
+            "nl": [
+                "Stad."
+            ]
+        },
+        {
+            "q": "Vilaĝo",
+            "en": [
+                "Village."
+            ],
+            "nl": [
+                "Dorp."
+            ]
+        },
+        {
+            "q": "Strato",
+            "en": [
+                "Street."
+            ],
+            "nl": [
+                "Straat."
+            ]
+        },
+        {
+            "q": "Placo",
+            "en": [
+                "Square."
+            ],
+            "nl": [
+                "Plein."
+            ]
+        },
+        {
+            "q": "Ejo",
+            "en": [
+                "Place."
+            ],
+            "nl": [
+                "Plaats."
+            ]
+        },
+        {
+            "q": "Kie?",
+            "en": [
+                "Where?"
+            ],
+            "nl": [
+                "Waar?"
+            ]
+        },
+        {
+            "q": "Kiam?",
+            "en": [
+                "When?"
+            ],
+            "nl": [
+                "Wanneer?"
+            ]
+        },
+        {
+            "q": "Kial?",
+            "en": [
+                "Why?"
+            ],
+            "nl": [
+                "Waarom?"
+            ]
+        },
+        {
+            "q": "Kiu?",
+            "en": [
+                "Who?"
+            ],
+            "nl": [
+                "Wie?"
+            ]
+        },
+        {
+            "q": "Kio?",
+            "en": [
+                "What?"
+            ],
+            "nl": [
+                "Wat?"
+            ]
+        },
+        {
+            "q": "Kiel?",
+            "en": [
+                "How?"
+            ],
+            "nl": [
+                "Hoe?"
+            ]
+        },
+        {
+            "q": "Kiuj?",
+            "en": [
+                "Which?"
+            ],
+            "nl": [
+                "Welke?"
+            ]
+        },
+        {
+            "q": "Kiom?",
+            "en": [
+                "How much?"
+            ],
+            "nl": [
+                "Hoeveel?"
+            ]
+        },
+        {
+            "q": "Kiom da?",
+            "en": [
+                "How many?"
+            ],
+            "nl": [
+                "Hoeveel?"
+            ]
+        },
+        {
+            "q": "Kia?",
+            "en": [
+                "What kind of?"
+            ],
+            "nl": [
+                "Wat voor?"
+            ]
+        },
+        {
+            "q": "Kies?",
+            "en": [
+                "Whose?"
+            ],
+            "nl": [
+                "Wiens?"
+            ]
+        },
+        {
+            "q": "Kien?",
+            "en": [
+                "To where?"
+            ],
+            "nl": [
+                "Naar waar?"
+            ]
+        },
+        {
+            "q": "Kiamaniere?",
+            "en": [
+                "In what way?"
+            ],
+            "nl": [
+                "Op welke manier?"
+            ]
+        },
+        {
+            "q": "Bonvolu",
+            "en": [
+                "Please."
+            ],
+            "nl": [
+                "Alsjeblieft."
+            ]
+        },
+        {
+            "q": "Pardonu",
+            "en": [
+                "Excuse me."
+            ],
+            "nl": [
+                "Excuseer me."
+            ]
+        },
+        {
+            "q": "Kiel vi nomiĝas?",
+            "en": [
+                "What is your name?"
+            ],
+            "nl": [
+                "Hoe heet je?"
+            ]
+        },
+        {
+            "q": "Kie vi laboras?",
+            "en": [
+                "Where do you work?"
+            ],
+            "nl": [
+                "Waar werk je?"
+            ]
+        },
+        {
+            "q": "Kie vi studas?",
+            "en": [
+                "Where do you study?"
+            ],
+            "nl": [
+                "Waar studeer je?"
+            ]
+        },
+        {
+            "q": "Kion vi ŝatas fari?",
+            "en": [
+                "What do you like to do?"
+            ],
+            "nl": [
+                "Wat vind je leuk om te doen?"
+            ]
+        },
+        {
+            "q": "Mi bezonas helpon",
+            "en": [
+                "I need help."
+            ],
+            "nl": [
+                "Ik heb hulp nodig."
+            ]
+        },
+        {
+            "q": "Mi estas perdita",
+            "en": [
+                "I am lost."
+            ],
+            "nl": [
+                "Ik ben verdwaald."
+            ]
+        },
+        {
+            "q": "Mi sentas min bone",
+            "en": [
+                "I feel good."
+            ],
+            "nl": [
+                "Ik voel me goed."
+            ]
+        },
+        {
+            "q": "Mi malsatas",
+            "en": [
+                "I am hungry."
+            ],
+            "nl": [
+                "Ik heb honger."
+            ]
+        },
+        {
+            "q": "Mi soifas",
+            "en": [
+                "I am thirsty."
+            ],
+            "nl": [
+                "Ik heb dorst."
+            ]
+        },
+        {
+            "q": "Mi estas feliĉa",
+            "en": [
+                "I am happy."
+            ],
+            "nl": [
+                "Ik ben blij."
+            ]
+        },
+        {
+            "q": "Mi estas malgaja",
+            "en": [
+                "I am sad."
+            ],
+            "nl": [
+                "Ik ben verdrietig."
+            ]
+        },
+        {
+            "q": "Mi komprenas",
+            "en": [
+                "I understand."
+            ],
+            "nl": [
+                "Ik begrijp het."
+            ]
+        },
+        {
+            "q": "Mi ne komprenas",
+            "en": [
+                "I don't understand."
+            ],
+            "nl": [
+                "Ik begrijp het niet."
+            ]
+        },
+        {
+            "q": "Mi scias",
+            "en": [
+                "I know."
+            ],
+            "nl": [
+                "Ik weet het."
+            ]
+        },
+        {
+            "q": "Mi ne scias",
+            "en": [
+                "I don't know."
+            ],
+            "nl": [
+                "Ik weet het niet."
+            ]
+        },
+        {
+            "q": "Mi opinias, ke...",
+            "en": [
+                "I think that..."
+            ],
+            "nl": [
+                "Ik denk dat..."
+            ]
+        },
+        {
+            "q": "Mi sentas, ke...",
+            "en": [
+                "I feel that..."
+            ],
+            "nl": [
+                "Ik voel dat..."
+            ]
+        },
+        {
+            "q": "Mi volas...",
+            "en": [
+                "I want..."
+            ],
+            "nl": [
+                "Ik wil..."
+            ]
+        },
+        {
+            "q": "Mi bezonas...",
+            "en": [
+                "I need..."
+            ],
+            "nl": [
+                "Ik heb nodig..."
+            ]
+        },
+        {
+            "q": "Mi havas...",
+            "en": [
+                "I have..."
+            ],
+            "nl": [
+                "Ik heb..."
+            ]
+        },
+        {
+            "q": "Mi vidas...",
+            "en": [
+                "I see..."
+            ],
+            "nl": [
+                "Ik zie..."
+            ]
+        },
+        {
+            "q": "Mi aŭdas...",
+            "en": [
+                "I hear..."
+            ],
+            "nl": [
+                "Ik hoor..."
+            ]
+        },
+        {
+            "q": "Mi sentas...",
+            "en": [
+                "I feel..."
+            ],
+            "nl": [
+                "Ik voel..."
+            ]
+        },
+        {
+            "q": "Mi gustumas...",
+            "en": [
+                "I taste..."
+            ],
+            "nl": [
+                "Ik proef..."
+            ]
+        },
+        {
+            "q": "Mi flaras...",
+            "en": [
+                "I smell..."
+            ],
+            "nl": [
+                "Ik ruik..."
+            ]
+        },
+        {
+            "q": "Mi tuŝas...",
+            "en": [
+                "I touch..."
+            ],
+            "nl": [
+                "Ik raak aan..."
+            ]
+        },
+        {
+            "q": "Mi ŝatas...",
+            "en": [
+                "I like..."
+            ],
+            "nl": [
+                "Ik vind leuk..."
+            ]
+        },
+        {
+            "q": "Mi malŝatas...",
+            "en": [
+                "I dislike..."
+            ],
+            "nl": [
+                "Ik vind niet leuk..."
+            ]
+        },
+        {
+            "q": "Mi amas...",
+            "en": [
+                "I love..."
+            ],
+            "nl": [
+                "Ik hou van..."
+            ]
+        },
+        {
+            "q": "Mi malamas...",
+            "en": [
+                "I hate..."
+            ],
+            "nl": [
+                "Ik haat..."
+            ]
+        },
+        {
+            "q": "Mi esperas...",
+            "en": [
+                "I hope..."
+            ],
+            "nl": [
+                "Ik hoop..."
+            ]
+        },
+        {
+            "q": "Mi timas...",
+            "en": [
+                "I fear..."
+            ],
+            "nl": [
+                "Ik ben bang..."
+            ]
+        },
+        {
+            "q": "Mi ridas",
+            "en": [
+                "I laugh."
+            ],
+            "nl": [
+                "Ik lach."
+            ]
+        },
+        {
+            "q": "Mi ploras",
+            "en": [
+                "I cry."
+            ],
+            "nl": [
+                "Ik huil."
+            ]
+        },
+        {
+            "q": "Mi dormas",
+            "en": [
+                "I sleep."
+            ],
+            "nl": [
+                "Ik slaap."
+            ]
+        },
+        {
+            "q": "Mi laboras",
+            "en": [
+                "I work."
+            ],
+            "nl": [
+                "Ik werk."
+            ]
+        },
+        {
+            "q": "Mi lernas",
+            "en": [
+                "I learn."
+            ],
+            "nl": [
+                "Ik leer."
+            ]
+        },
+        {
+            "q": "Mi ludas",
+            "en": [
+                "I play."
+            ],
+            "nl": [
+                "Ik speel."
+            ]
+        },
+        {
+            "q": "Mi manĝas",
+            "en": [
+                "I eat."
+            ],
+            "nl": [
+                "Ik eet."
+            ]
+        },
+        {
+            "q": "Mi trinkas",
+            "en": [
+                "I drink."
+            ],
+            "nl": [
+                "Ik drink."
+            ]
+        },
+        {
+            "q": "Mi kuras",
+            "en": [
+                "I run."
+            ],
+            "nl": [
+                "Ik ren."
+            ]
+        },
+        {
+            "q": "Mi saltas",
+            "en": [
+                "I jump."
+            ],
+            "nl": [
+                "Ik spring."
+            ]
+        },
+        {
+            "q": "Mi promenas",
+            "en": [
+                "I walk."
+            ],
+            "nl": [
+                "Ik wandel."
+            ]
+        },
+        {
+            "q": "Mi veturas",
+            "en": [
+                "I drive."
+            ],
+            "nl": [
+                "Ik rijd."
+            ]
+        }
+    ]
+}
