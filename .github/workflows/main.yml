@@ -15,6 +15,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  BASE_PATH: ${{ vars.BASE_PATH }}
+
 jobs:
   build:
     name: build
