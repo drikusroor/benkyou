@@ -519,5 +519,5 @@
 	{/if}
 </div>
 
-<audio id="correctAudio" src="correct.m4a" />
-<audio id="incorrectAudio" src="incorrect.m4a" />
+<audio id="correctAudio" src="/correct.m4a" />
+<audio id="incorrectAudio" src="/incorrect.m4a" />
