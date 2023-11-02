@@ -1,11 +1,19 @@
-
 # 百 - Hyaku
 
-![百 - Hyaku logo](favicon.png)
+[![CI](https://github.com/drikusroor/hyaku/actions/workflows/main.yml/badge.svg)](https://github.com/drikusroor/hyaku/actions/workflows/main.yml)
 
-Hyaku is a mini web application to practice the 100 most important japanese words &amp; sentences. It tracks the mistakes you make and then prioritizes those words.
+![百 - Hyaku logo](./static/favicon.png)
+
+Hyaku is a mini web application to practice the 100 most important Japanese or Esperanto words &amp; sentences. It tracks the mistakes you make and then prioritizes those words.
 
 You can visit the site at: <https://drikusroor.github.io/hyaku/>
+
+## Languages to learn
+
+Currently, the following languages are supported:
+
+- [Japanese](https://drikusroor.github.io/hyaku/japanese)
+- [Esperanto](https://drikusroor.github.io/hyaku/esperanto)
 
 ## Languages and modes
 
