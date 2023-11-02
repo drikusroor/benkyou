@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 
     export let flashCardsConfigurationData: FlashCardsConfigurationData;
 
@@ -339,7 +340,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				{#each languages as language, index}
 					<a
-						href="?lang={language.code}&mode={learningMode}"
+						href="{base}?lang={language.code}&mode={learningMode}"
 						class="text-white hover:text-pink-400 {language.code === currentLanguage
 							? 'underline'
 							: ''}"
@@ -356,7 +357,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				<a
 					id="fromLink"
-					href="?lang={currentLanguage}&mode=from"
+					href="{base}?lang={currentLanguage}&mode=from"
 					class="text-white hover:text-pink-400 {learningMode === 'from' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
@@ -365,7 +366,7 @@
 				<span class="text-white">|</span>
 				<a
 					id="toLink"
-					href="?lang={currentLanguage}&mode=to"
+					href="{base}?lang={currentLanguage}&mode=to"
 					class="text-white hover:text-pink-400 {learningMode === 'to' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
@@ -519,5 +520,5 @@
 	{/if}
 </div>
 
-<audio id="correctAudio" src="/correct.m4a" />
-<audio id="incorrectAudio" src="/incorrect.m4a" />
+<audio id="correctAudio" src="{base}/correct.m4a" />
+<audio id="incorrectAudio" src="{base}/incorrect.m4a" />
