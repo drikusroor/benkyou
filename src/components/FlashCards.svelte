@@ -439,6 +439,12 @@
 				<span class="text-white">|</span>
 				<span class="text-white w-12 text-center">...</span>
 			</div>
+
+			<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
+				<span class="text-white w-12 text-center">...</span>
+				<span class="text-white">|</span>
+				<span class="text-white w-12 text-center">...</span>
+			</div>
 		{/if}
 	</div>
 
