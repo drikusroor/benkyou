@@ -314,9 +314,20 @@
 		loadNextSentence();
 	}
 
+	function changeShowPronunciation(event: Event) {
+		event.preventDefault();
+		const target = event.currentTarget as HTMLLinkElement;
+		const url = new URL(target.href);
+		goto(url.href, { replaceState: true });
+		const newShowPronunciation = url.searchParams.get('showPronunciation') as 'true' | 'false';
+		showPronunciation = newShowPronunciation === 'true';
+		loadNextSentence();
+	}
+
 	onMount(() => {
 		currentLanguage = getCurrentLanguage();
 		learningMode = getMode();
+		showPronunciation = getShowPronunciation();
 		sentences = shuffle(data.questions);
 		filteredSentences = [...sentences];
 
@@ -340,6 +351,10 @@
 			return new URLSearchParams(window.location.search).get('mode') === 'to' ? 'to' : 'from';
 		}
 
+		function getShowPronunciation() {
+			return new URLSearchParams(window.location.search).get('showPronunciation') === 'true';
+		}
+
 		if (localStorage.getItem('mistakes')) {
 			mistakes = JSON.parse(localStorage.getItem('mistakes') || '{}') as Mistakes;
 		}
@@ -356,7 +371,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				{#each languages as language, index}
 					<a
-						href="{base}?lang={language.code}&mode={learningMode}"
+						href="{base}?lang={language.code}&mode={learningMode}&showPronunciation={showPronunciation}"
 						class="text-white hover:text-pink-400 {language.code === currentLanguage
 							? 'underline'
 							: ''}"
@@ -373,7 +388,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				<a
 					id="fromLink"
-					href="{base}?lang={currentLanguage}&mode=from"
+					href="{base}?lang={currentLanguage}&mode=from&showPronunciation={showPronunciation}"
 					class="text-white hover:text-pink-400 {learningMode === 'from' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
@@ -382,13 +397,34 @@
 				<span class="text-white">|</span>
 				<a
 					id="toLink"
-					href="{base}?lang={currentLanguage}&mode=to"
+					href="{base}?lang={currentLanguage}&mode=to&showPronunciation={showPronunciation}"
 					class="text-white hover:text-pink-400 {learningMode === 'to' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
 					{t('toLinkText', 'To')}
 				</a>
 			</div>
+
+			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
+				<a
+					id="showPronunciation"
+					href="{base}?lang={currentLanguage}&mode={learningMode}&showPronunciation=true"
+					class="text-white hover:text-pink-400 {showPronunciation ? 'underline' : ''}"
+					on:click={changeShowPronunciation}
+				>
+					{t('showPronunciationText', 'は (ha)')}
+				</a>
+				<span class="text-white">|</span>
+				<a
+					id="hidePronunciation"
+					href="{base}?lang={currentLanguage}&mode={learningMode}&showPronunciation=false"
+					class="text-white hover:text-pink-400 {!showPronunciation ? 'underline' : ''}"
+					on:click={changeShowPronunciation}
+				>
+					{t('hidePronunciationText', 'は')}
+				</a>
+			</div>
+
 		{/if}
 
 		{#if loading}
