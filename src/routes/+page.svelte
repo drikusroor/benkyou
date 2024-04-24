@@ -21,6 +21,12 @@
 		>
 
 		<a
+			href="{base}/japanese-kanji"
+			class="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out"
+			>Kanji</a
+		>
+
+		<a
 			href="{base}/esperanto"
 			class="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out"
 			>Esperanto</a

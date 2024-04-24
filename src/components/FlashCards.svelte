@@ -16,7 +16,9 @@
 		| 'nextQuestion'
 		| 'search'
 		| 'fromLinkText'
-		| 'toLinkText';
+		| 'toLinkText'
+		| 'showPronunciationText'
+		| 'hidePronunciationText';
 
 	interface Language {
 		code: string;
