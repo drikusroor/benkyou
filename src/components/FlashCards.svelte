@@ -52,7 +52,7 @@
 	let t: (key: TranslationKeys, defaultValue?: string) => string;
 	let currentLanguage: LanguageCode;
 	let learningMode: 'from' | 'to';
-	let showPronunciation: boolean = false;
+	let showPronunciation: boolean = true;
 
 	// QA flow related
 	let questionBoxClasses = '';
