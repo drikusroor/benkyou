@@ -101,6 +101,14 @@
 		return questionText;
 	}
 
+	/**
+	 * Reloads the current sentence with the current settings.
+	 * This is useful when the user changes the learning mode or the show pronunciation setting.
+	 */
+	function reloadCurrentSentence() {
+		questionText = getQuestionText(currentSentence, { learningMode, showPronunciation });
+	}
+
 	function loadNextSentence() {
 		currentTimeout ? clearTimeout(currentTimeout) : null;
 		currentSentence = getNextSentence();
@@ -323,7 +331,7 @@
 		goto(url.href, { replaceState: true });
 		const newShowPronunciation = url.searchParams.get('showPronunciation') as 'true' | 'false';
 		showPronunciation = newShowPronunciation === 'true';
-		loadNextSentence();
+		reloadCurrentSentence();
 	}
 
 	onMount(() => {
