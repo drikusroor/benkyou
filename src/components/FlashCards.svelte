@@ -334,6 +334,14 @@
 		reloadCurrentSentence();
 	}
 
+	function getCurrentPageUrl(params: Record<string, string> = {}) {
+		const url = new URL(window.location.href);
+		Object.entries(params).forEach(([key, value]) => {
+			url.searchParams.set(key, value);
+		});
+		return url.href;
+	}
+
 	onMount(() => {
 		currentLanguage = getCurrentLanguage();
 		learningMode = getMode();
@@ -386,7 +394,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				{#each languages as language, index}
 					<a
-						href="{base}?lang={language.code}&mode={learningMode}&showPronunciation={showPronunciation}"
+						href="{getCurrentPageUrl({ lang: language.code })}"
 						class="text-white hover:text-pink-400 {language.code === currentLanguage
 							? 'underline'
 							: ''}"
@@ -403,7 +411,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				<a
 					id="fromLink"
-					href="{base}?lang={currentLanguage}&mode=from&showPronunciation={showPronunciation}"
+					href="{getCurrentPageUrl({ mode: 'from' })}"
 					class="text-white hover:text-pink-400 {learningMode === 'from' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
@@ -412,7 +420,7 @@
 				<span class="text-white">|</span>
 				<a
 					id="toLink"
-					href="{base}?lang={currentLanguage}&mode=to&showPronunciation={showPronunciation}"
+					href="{getCurrentPageUrl({ mode: 'to' })}"
 					class="text-white hover:text-pink-400 {learningMode === 'to' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
@@ -423,7 +431,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				<a
 					id="showPronunciation"
-					href="{base}?lang={currentLanguage}&mode={learningMode}&showPronunciation=true"
+					href="{getCurrentPageUrl({ showPronunciation: 'true' })}"
 					class="text-white hover:text-pink-400 {showPronunciation ? 'underline' : ''}"
 					on:click={changeShowPronunciation}
 				>
@@ -432,7 +440,7 @@
 				<span class="text-white">|</span>
 				<a
 					id="hidePronunciation"
-					href="{base}?lang={currentLanguage}&mode={learningMode}&showPronunciation=false"
+					href="{getCurrentPageUrl({ showPronunciation: 'false' })}"
 					class="text-white hover:text-pink-400 {!showPronunciation ? 'underline' : ''}"
 					on:click={changeShowPronunciation}
 				>
