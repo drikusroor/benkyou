@@ -52,6 +52,7 @@
 	let t: (key: TranslationKeys, defaultValue?: string) => string;
 	let currentLanguage: LanguageCode;
 	let learningMode: 'from' | 'to';
+	let showPronunciation: boolean = false;
 
 	// QA flow related
 	let questionBoxClasses = '';
@@ -82,11 +83,26 @@
 		}
 	}
 
+	function getQuestionText(currentSentence: Sentence, { learningMode = 'from', showPronunciation = true }) {
+		let questionText = currentSentence.q;
+
+		if (learningMode === 'to') {
+			questionText = currentSentence[currentLanguage].join(' / ');
+		}
+
+		if (!showPronunciation) {
+			// Remove the pronunciation between the parentheses from the question text
+			const re = /\(.*?\)/;
+			return questionText.replace(re, '').trim();
+		}
+
+		return questionText;
+	}
+
 	function loadNextSentence() {
 		currentTimeout ? clearTimeout(currentTimeout) : null;
 		currentSentence = getNextSentence();
-		questionText =
-			learningMode === 'from' ? currentSentence.q : currentSentence[currentLanguage].join(' / ');
+		questionText = getQuestionText(currentSentence, { learningMode, showPronunciation });
 		answerInputValue = '';
 		feedbackText = '';
 		isFeedbackDisplayed = false;
