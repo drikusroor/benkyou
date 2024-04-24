@@ -376,6 +376,11 @@
 </script>
 
 <div class="min-h-screen bg-black flex flex-col items-center p-5">
+	<a
+		href="{base}/"
+		class="absolute top-5 left-5 text-white text-sm bg-purple-600 px-4 py-2 rounded-md hover:bg-pink-600 focus:outline-none focus:border-pink-700 focus:ring focus:ring-purple-400 active:bg-pink-700 transition duration-150 ease-in-out"
+		>Back to Home</a
+	>
 	<div class="flex flex-row gap-4">
 		{#if !loading}
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
