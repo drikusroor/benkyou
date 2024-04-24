@@ -352,7 +352,7 @@
 		}
 
 		function getShowPronunciation() {
-			return new URLSearchParams(window.location.search).get('showPronunciation') === 'true';
+			return new URLSearchParams(window.location.search).get('showPronunciation') !== 'false';
 		}
 
 		if (localStorage.getItem('mistakes')) {
