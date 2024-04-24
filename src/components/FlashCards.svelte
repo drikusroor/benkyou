@@ -52,6 +52,7 @@
 	let t: (key: TranslationKeys, defaultValue?: string) => string;
 	let currentLanguage: LanguageCode;
 	let learningMode: 'from' | 'to';
+	let showPronunciation: boolean = true;
 
 	// QA flow related
 	let questionBoxClasses = '';
@@ -82,11 +83,26 @@
 		}
 	}
 
+	function getQuestionText(currentSentence: Sentence, { learningMode = 'from', showPronunciation = true }) {
+		let questionText = currentSentence.q;
+
+		if (learningMode === 'to') {
+			questionText = currentSentence[currentLanguage].join(' / ');
+		}
+
+		if (!showPronunciation) {
+			// Remove the pronunciation between the parentheses from the question text
+			const re = /\(.*?\)/;
+			return questionText.replace(re, '').trim();
+		}
+
+		return questionText;
+	}
+
 	function loadNextSentence() {
 		currentTimeout ? clearTimeout(currentTimeout) : null;
 		currentSentence = getNextSentence();
-		questionText =
-			learningMode === 'from' ? currentSentence.q : currentSentence[currentLanguage].join(' / ');
+		questionText = getQuestionText(currentSentence, { learningMode, showPronunciation });
 		answerInputValue = '';
 		feedbackText = '';
 		isFeedbackDisplayed = false;
@@ -298,9 +314,20 @@
 		loadNextSentence();
 	}
 
+	function changeShowPronunciation(event: Event) {
+		event.preventDefault();
+		const target = event.currentTarget as HTMLLinkElement;
+		const url = new URL(target.href);
+		goto(url.href, { replaceState: true });
+		const newShowPronunciation = url.searchParams.get('showPronunciation') as 'true' | 'false';
+		showPronunciation = newShowPronunciation === 'true';
+		loadNextSentence();
+	}
+
 	onMount(() => {
 		currentLanguage = getCurrentLanguage();
 		learningMode = getMode();
+		showPronunciation = getShowPronunciation();
 		sentences = shuffle(data.questions);
 		filteredSentences = [...sentences];
 
@@ -324,6 +351,10 @@
 			return new URLSearchParams(window.location.search).get('mode') === 'to' ? 'to' : 'from';
 		}
 
+		function getShowPronunciation() {
+			return new URLSearchParams(window.location.search).get('showPronunciation') === 'true';
+		}
+
 		if (localStorage.getItem('mistakes')) {
 			mistakes = JSON.parse(localStorage.getItem('mistakes') || '{}') as Mistakes;
 		}
@@ -340,7 +371,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				{#each languages as language, index}
 					<a
-						href="{base}?lang={language.code}&mode={learningMode}"
+						href="{base}?lang={language.code}&mode={learningMode}&showPronunciation={showPronunciation}"
 						class="text-white hover:text-pink-400 {language.code === currentLanguage
 							? 'underline'
 							: ''}"
@@ -357,7 +388,7 @@
 			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
 				<a
 					id="fromLink"
-					href="{base}?lang={currentLanguage}&mode=from"
+					href="{base}?lang={currentLanguage}&mode=from&showPronunciation={showPronunciation}"
 					class="text-white hover:text-pink-400 {learningMode === 'from' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
@@ -366,16 +397,43 @@
 				<span class="text-white">|</span>
 				<a
 					id="toLink"
-					href="{base}?lang={currentLanguage}&mode=to"
+					href="{base}?lang={currentLanguage}&mode=to&showPronunciation={showPronunciation}"
 					class="text-white hover:text-pink-400 {learningMode === 'to' ? 'underline' : ''}"
 					on:click={changeMode}
 				>
 					{t('toLinkText', 'To')}
 				</a>
 			</div>
+
+			<div class="rounded-xl bg-slate-900 p-4 mb-4 flex flex-row gap-2">
+				<a
+					id="showPronunciation"
+					href="{base}?lang={currentLanguage}&mode={learningMode}&showPronunciation=true"
+					class="text-white hover:text-pink-400 {showPronunciation ? 'underline' : ''}"
+					on:click={changeShowPronunciation}
+				>
+					{t('showPronunciationText', 'は (ha)')}
+				</a>
+				<span class="text-white">|</span>
+				<a
+					id="hidePronunciation"
+					href="{base}?lang={currentLanguage}&mode={learningMode}&showPronunciation=false"
+					class="text-white hover:text-pink-400 {!showPronunciation ? 'underline' : ''}"
+					on:click={changeShowPronunciation}
+				>
+					{t('hidePronunciationText', 'は')}
+				</a>
+			</div>
+
 		{/if}
 
 		{#if loading}
+			<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
+				<span class="text-white w-12 text-center">...</span>
+				<span class="text-white">|</span>
+				<span class="text-white w-12 text-center">...</span>
+			</div>
+
 			<div class="rounded-xl bg-purple-900 animate-pulse p-4 mb-4 flex flex-row gap-2">
 				<span class="text-white w-12 text-center">...</span>
 				<span class="text-white">|</span>
